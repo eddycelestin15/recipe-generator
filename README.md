@@ -143,9 +143,61 @@ Generates an image description using Gemini AI.
 - For actual image generation, you can use the generated prompt with services like DALL-E 3, Midjourney, or Stable Diffusion
 - Make sure to keep your API keys secure and never commit them to version control
 
-## Deploy on Vercel
+## Deploy on Vercel (Free)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You can deploy this app for free on Vercel. Follow these steps:
+
+### Option 1: Deploy via GitHub (Recommended)
+
+1. **Push your code to GitHub:**
+   ```bash
+   # Create a new repository on GitHub first, then:
+   git remote add origin https://github.com/YOUR_USERNAME/recipe-generator.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+2. **Deploy to Vercel:**
+   - Go to [vercel.com](https://vercel.com) and sign up with your GitHub account
+   - Click "New Project"
+   - Import your `recipe-generator` repository
+   - Vercel will auto-detect it's a Next.js app
+   - Add your environment variable:
+     - Name: `GEMINI_API_KEY`
+     - Value: Your Gemini API key
+   - Click "Deploy"
+
+3. **Done!** Your app will be live at `https://your-app-name.vercel.app`
+
+### Option 2: Deploy via Vercel CLI
+
+1. **Install Vercel CLI:**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Login to Vercel:**
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy:**
+   ```bash
+   cd recipe-generator
+   vercel
+   ```
+
+4. **Add environment variable:**
+   - Go to your project on [vercel.com](https://vercel.com/dashboard)
+   - Go to Settings → Environment Variables
+   - Add `GEMINI_API_KEY` with your API key value
+   - Redeploy the project
+
+### Other Free Hosting Options
+
+- **Netlify**: Similar to Vercel, offers free Next.js hosting
+- **Cloudflare Pages**: Free hosting with edge computing
+- **Railway**: Free tier available for Next.js apps
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
