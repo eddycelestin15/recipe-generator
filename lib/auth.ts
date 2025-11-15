@@ -1,17 +1,13 @@
 import NextAuth from "next-auth"
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
-import mongoose from "mongoose"
 import { connectToDatabase } from "./db/db-client"
 import { UserModel } from "./db/schemas/user.schema"
 
-// MongoDB client for NextAuth adapter
-const client = mongoose.connection.getClient()
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: MongoDBAdapter(client),
+  // Note: We're not using MongoDBAdapter due to conflict with mongoose
+  // Sessions are handled via JWT instead
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 type Params = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 /**
  * GET /api/users/:id
  */
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(request: NextRequest, props: Params) {
   try {
+    const params = await props.params;
     const user = await db.users.findById(params.id);
 
     if (!user) {
@@ -35,8 +36,9 @@ export async function GET(request: NextRequest, { params }: Params) {
  * PATCH /api/users/:id
  * Body: Partial user data
  */
-export async function PATCH(request: NextRequest, { params }: Params) {
+export async function PATCH(request: NextRequest, props: Params) {
   try {
+    const params = await props.params;
     const body = await request.json();
     const user = await db.users.update(params.id, body);
 
@@ -60,8 +62,9 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 /**
  * DELETE /api/users/:id
  */
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest, props: Params) {
   try {
+    const params = await props.params;
     await db.users.delete(params.id);
     return NextResponse.json({ success: true });
   } catch (error) {

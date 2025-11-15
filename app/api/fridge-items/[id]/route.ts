@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 type Params = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 /**
  * GET /api/fridge-items/:id
  */
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(request: NextRequest, props: Params) {
   try {
+    const params = await props.params;
     const item = await db.fridgeItems.findById(params.id);
 
     if (!item) {
@@ -35,8 +36,9 @@ export async function GET(request: NextRequest, { params }: Params) {
  * PATCH /api/fridge-items/:id
  * Body: Partial fridge item data
  */
-export async function PATCH(request: NextRequest, { params }: Params) {
+export async function PATCH(request: NextRequest, props: Params) {
   try {
+    const params = await props.params;
     const body = await request.json();
     const item = await db.fridgeItems.update(params.id, body);
 
@@ -60,8 +62,9 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 /**
  * DELETE /api/fridge-items/:id
  */
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest, props: Params) {
   try {
+    const params = await props.params;
     await db.fridgeItems.delete(params.id);
     return NextResponse.json({ success: true });
   } catch (error) {
