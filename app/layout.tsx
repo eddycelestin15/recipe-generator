@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import FitnessInitializer from "./components/FitnessInitializer";
+import HabitsInitializer from "./components/HabitsInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <FitnessInitializer />
+        <HabitsInitializer />
         <Navigation />
         {children}
       </body>
