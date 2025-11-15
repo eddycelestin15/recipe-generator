@@ -3,17 +3,22 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target, Sparkles, Brain } from 'lucide-react';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
+  const [insightsCount, setInsightsCount] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
     loadExpiringCount();
+    loadInsightsCount();
 
     // Recharger toutes les 60 secondes
-    const interval = setInterval(loadExpiringCount, 60000);
+    const interval = setInterval(() => {
+      loadExpiringCount();
+      loadInsightsCount();
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -24,6 +29,16 @@ export default function Navigation() {
       setExpiringCount(data.count || 0);
     } catch (error) {
       console.error('Error loading expiring count:', error);
+    }
+  };
+
+  const loadInsightsCount = async () => {
+    try {
+      const response = await fetch('/api/ai/insights?unread=true');
+      const data = await response.json();
+      setInsightsCount(data.unreadCount || 0);
+    } catch (error) {
+      console.error('Error loading insights count:', error);
     }
   };
 
@@ -75,6 +90,18 @@ export default function Navigation() {
       icon: Target,
       label: 'Habitudes',
       badge: null,
+    },
+    {
+      href: '/ai-coach',
+      icon: Brain,
+      label: 'Coach IA',
+      badge: null,
+    },
+    {
+      href: '/insights',
+      icon: Sparkles,
+      label: 'Insights',
+      badge: insightsCount > 0 ? insightsCount : null,
     },
   ];
 
