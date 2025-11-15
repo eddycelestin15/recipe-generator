@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat, BookOpen, Activity } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar } from 'lucide-react';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
@@ -38,6 +38,12 @@ export default function Navigation() {
       href: '/recipes',
       icon: BookOpen,
       label: 'Bibliothèque',
+      badge: null,
+    },
+    {
+      href: '/meal-planning',
+      icon: Calendar,
+      label: 'Planification',
       badge: null,
     },
     {
