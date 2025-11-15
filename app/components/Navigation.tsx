@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target, Sparkles, Brain } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target, Sparkles, Brain, Crown, User, CreditCard } from 'lucide-react';
+import { useSubscription } from '@/app/lib/hooks/useSubscription';
+import PremiumBadge from '@/app/components/premium/PremiumBadge';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
   const [insightsCount, setInsightsCount] = useState(0);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
   const pathname = usePathname();
+  const { isPremium, isInTrial, trialDaysRemaining } = useSubscription();
 
   useEffect(() => {
     loadExpiringCount();
@@ -112,9 +116,15 @@ export default function Navigation() {
           <div className="flex items-center gap-2">
             <ChefHat className="w-8 h-8 text-orange-500" />
             <span className="text-xl font-bold text-gray-800">AI Recipe Generator</span>
+            {isPremium && <PremiumBadge variant="small" />}
+            {isInTrial && (
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                Trial: {trialDaysRemaining}d left
+              </span>
+            )}
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -142,6 +152,45 @@ export default function Navigation() {
                 </Link>
               );
             })}
+
+            {/* Account Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowAccountMenu(!showAccountMenu)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <User className="w-5 h-5" />
+              </button>
+
+              {showAccountMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowAccountMenu(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                    <Link
+                      href="/account/subscription"
+                      onClick={() => setShowAccountMenu(false)}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <CreditCard className="w-5 h-5 text-gray-600" />
+                      <span className="text-gray-700">Subscription</span>
+                    </Link>
+                    {!isPremium && (
+                      <Link
+                        href="/pricing"
+                        onClick={() => setShowAccountMenu(false)}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors bg-gradient-to-r from-emerald-50 to-teal-50"
+                      >
+                        <Crown className="w-5 h-5 text-emerald-600" />
+                        <span className="font-semibold text-emerald-600">Upgrade to Premium</span>
+                      </Link>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
