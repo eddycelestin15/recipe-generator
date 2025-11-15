@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen } from 'lucide-react';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
@@ -31,7 +31,13 @@ export default function Navigation() {
     {
       href: '/',
       icon: ChefHat,
-      label: 'Recettes',
+      label: 'Générateur',
+      badge: null,
+    },
+    {
+      href: '/recipes',
+      icon: BookOpen,
+      label: 'Bibliothèque',
       badge: null,
     },
     {
@@ -54,7 +60,10 @@ export default function Navigation() {
           <div className="flex gap-4">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive =
+                item.href === '/'
+                  ? pathname === '/'
+                  : pathname.startsWith(item.href);
 
               return (
                 <Link
