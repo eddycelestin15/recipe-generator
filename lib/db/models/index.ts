@@ -8,11 +8,13 @@ export interface BaseEntity {
 // User Model
 export interface UserProfile {
   age?: number;
+  gender?: 'male' | 'female' | 'other' | 'prefer_not_to_say';
   height?: number; // in cm
   weight?: number; // in kg
   activityLevel?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
   dietaryRestrictions?: string[];
   allergies?: string[];
+  avatar?: string; // URL to avatar image
 }
 
 export interface UserPreferences {
@@ -20,10 +22,12 @@ export interface UserPreferences {
   dislikedIngredients?: string[];
   cookingSkillLevel?: 'beginner' | 'intermediate' | 'advanced';
   maxCookingTime?: number; // in minutes
+  dietType?: 'none' | 'vegan' | 'vegetarian' | 'keto' | 'paleo' | 'mediterranean' | 'low_carb' | 'gluten_free';
 }
 
 export interface UserGoals {
   targetWeight?: number; // in kg
+  targetDate?: Date;
   dailyCalorieTarget?: number;
   macroTargets?: {
     protein?: number; // in grams
@@ -33,12 +37,28 @@ export interface UserGoals {
   goalType?: 'lose_weight' | 'gain_weight' | 'maintain' | 'build_muscle';
 }
 
+export interface UserSettings {
+  units?: 'metric' | 'imperial';
+  language?: string;
+  notifications?: {
+    email?: boolean;
+    mealReminders?: boolean;
+    expirationAlerts?: boolean;
+  };
+}
+
 export interface User extends BaseEntity {
   email: string;
   name: string;
+  password?: string; // Hashed password (optional for OAuth users)
+  emailVerified?: Date;
+  image?: string; // OAuth provider image
+  provider?: 'credentials' | 'google' | 'github';
   profile?: UserProfile;
   preferences?: UserPreferences;
   goals?: UserGoals;
+  settings?: UserSettings;
+  onboardingCompleted?: boolean;
 }
 
 // FridgeItem Model

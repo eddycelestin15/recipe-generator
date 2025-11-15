@@ -1,10 +1,14 @@
 import mongoose, { Schema, Model } from 'mongoose';
-import { User, UserProfile, UserPreferences, UserGoals } from '../models';
+import { User, UserProfile, UserPreferences, UserGoals, UserSettings } from '../models';
 
 // Define subdocument schemas
 const UserProfileSchema = new Schema<UserProfile>(
   {
     age: { type: Number },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'other', 'prefer_not_to_say'],
+    },
     height: { type: Number },
     weight: { type: Number },
     activityLevel: {
@@ -13,6 +17,7 @@ const UserProfileSchema = new Schema<UserProfile>(
     },
     dietaryRestrictions: [{ type: String }],
     allergies: [{ type: String }],
+    avatar: { type: String },
   },
   { _id: false }
 );
@@ -26,6 +31,10 @@ const UserPreferencesSchema = new Schema<UserPreferences>(
       enum: ['beginner', 'intermediate', 'advanced'],
     },
     maxCookingTime: { type: Number },
+    dietType: {
+      type: String,
+      enum: ['none', 'vegan', 'vegetarian', 'keto', 'paleo', 'mediterranean', 'low_carb', 'gluten_free'],
+    },
   },
   { _id: false }
 );
@@ -33,6 +42,7 @@ const UserPreferencesSchema = new Schema<UserPreferences>(
 const UserGoalsSchema = new Schema<UserGoals>(
   {
     targetWeight: { type: Number },
+    targetDate: { type: Date },
     dailyCalorieTarget: { type: Number },
     macroTargets: {
       protein: { type: Number },
@@ -42,6 +52,26 @@ const UserGoalsSchema = new Schema<UserGoals>(
     goalType: {
       type: String,
       enum: ['lose_weight', 'gain_weight', 'maintain', 'build_muscle'],
+    },
+  },
+  { _id: false }
+);
+
+const UserSettingsSchema = new Schema<UserSettings>(
+  {
+    units: {
+      type: String,
+      enum: ['metric', 'imperial'],
+      default: 'metric',
+    },
+    language: {
+      type: String,
+      default: 'en',
+    },
+    notifications: {
+      email: { type: Boolean, default: true },
+      mealReminders: { type: Boolean, default: false },
+      expirationAlerts: { type: Boolean, default: true },
     },
   },
   { _id: false }
@@ -63,6 +93,21 @@ const UserSchema = new Schema<User>(
       required: true,
       trim: true,
     },
+    password: {
+      type: String,
+      select: false, // Don't include password by default in queries
+    },
+    emailVerified: {
+      type: Date,
+    },
+    image: {
+      type: String,
+    },
+    provider: {
+      type: String,
+      enum: ['credentials', 'google', 'github'],
+      default: 'credentials',
+    },
     profile: {
       type: UserProfileSchema,
       default: () => ({}),
@@ -74,6 +119,22 @@ const UserSchema = new Schema<User>(
     goals: {
       type: UserGoalsSchema,
       default: () => ({}),
+    },
+    settings: {
+      type: UserSettingsSchema,
+      default: () => ({
+        units: 'metric',
+        language: 'en',
+        notifications: {
+          email: true,
+          mealReminders: false,
+          expirationAlerts: true,
+        },
+      }),
+    },
+    onboardingCompleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {
