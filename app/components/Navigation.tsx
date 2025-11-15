@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard } from 'lucide-react';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
@@ -28,6 +28,12 @@ export default function Navigation() {
   };
 
   const navItems = [
+    {
+      href: '/dashboard',
+      icon: LayoutDashboard,
+      label: 'Dashboard',
+      badge: null,
+    },
     {
       href: '/',
       icon: ChefHat,
