@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "./components/Navigation";
 import FitnessInitializer from "./components/FitnessInitializer";
 import HabitsInitializer from "./components/HabitsInitializer";
+import AIInsightsInitializer from "./components/AIInsightsInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         <FitnessInitializer />
         <HabitsInitializer />
+        <AIInsightsInitializer />
         <Navigation />
         {children}
       </body>
