@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell } from 'lucide-react';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
@@ -56,6 +56,12 @@ export default function Navigation() {
       href: '/nutrition',
       icon: Activity,
       label: 'Nutrition',
+      badge: null,
+    },
+    {
+      href: '/fitness',
+      icon: Dumbbell,
+      label: 'Fitness',
       badge: null,
     },
   ];

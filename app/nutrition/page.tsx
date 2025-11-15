@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { NutritionCircle } from '@/app/components/nutrition/NutritionCircle';
 import { MealTimeline } from '@/app/components/nutrition/MealTimeline';
 import { WaterIntake } from '@/app/components/nutrition/WaterIntake';
+import { CaloriesBurnedWidget } from '@/app/components/fitness/CaloriesBurnedWidget';
 import { Calendar, TrendingUp, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -230,6 +231,9 @@ export default function NutritionDashboard() {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Calories burned from workouts */}
+            <CaloriesBurnedWidget date={selectedDate} />
+
             {/* Water intake */}
             <WaterIntake
               currentIntake={stats.waterIntake}
