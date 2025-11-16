@@ -90,7 +90,7 @@ export class RecipeRepository {
 
     const newRecipe: Recipe = {
       id: generateId(),
-      userId: this.getUserId(),
+      userId: getCurrentUserId(),
       name: data.name,
       description: data.description,
       ingredients: data.ingredients,

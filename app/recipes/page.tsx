@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { RecipeRepository } from '../lib/repositories/recipe-repository';
-import { Recipe, RecipeSearchFilters, RecipeSortOptions } from '../lib/types/recipe';
+import { Recipe, RecipeSearchFilters, RecipeSortOptions, RecipeStats } from '../lib/types/recipe';
 import RecipeCard from '../components/recipes/RecipeCard';
 import RecipeFilters from '../components/recipes/RecipeFilters';
 import { Plus, Grid, List } from 'lucide-react';
@@ -21,7 +21,15 @@ export default function RecipesPage() {
   });
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [availableTags, setAvailableTags] = useState<string[]>([]);
-  const [stats, setStats] = useState({ totalRecipes: 0, favoriteCount: 0, generatedCount: 0 });
+  const [stats, setStats] = useState<RecipeStats>({
+    totalRecipes: 0,
+    favoriteCount: 0,
+    generatedCount: 0,
+    manualCount: 0,
+    averagePrepTime: 0,
+    recipesByDifficulty: {} as Record<string, number>,
+    recipesByCuisine: {}
+  });
 
   useEffect(() => {
     loadRecipes();

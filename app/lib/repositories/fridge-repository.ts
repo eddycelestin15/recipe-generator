@@ -1,5 +1,5 @@
 import { FridgeItem, CreateFridgeItemDTO, UpdateFridgeItemDTO } from '../types/fridge';
-import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
+import { isBrowser, getItem, setItem, removeItem, getCurrentUserId } from '../utils/storage';
 
 const STORAGE_KEY = 'smart_fridge_items';
 
