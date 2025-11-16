@@ -75,7 +75,8 @@ export function BottomSheet({
                 {dismissible && (
                   <button
                     onClick={() => onOpenChange(false)}
-                    className="ml-4 p-2 hover:bg-muted rounded-full transition-colors"
+                    className="ml-4 p-3 hover:bg-muted rounded-full transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    aria-label="Close"
                   >
                     <X className="w-5 h-5 text-muted-foreground" />
                   </button>
@@ -132,11 +133,12 @@ export function QuickActionSheet({ open, onOpenChange, actions }: QuickActionShe
               onOpenChange(false)
             }}
             className={cn(
-              'w-full flex items-center gap-4 p-4 rounded-xl transition-colors',
+              'w-full flex items-center gap-4 p-4 rounded-xl transition-colors min-h-[44px]',
               action.variant === 'destructive'
                 ? 'hover:bg-red-500/10 text-red-500'
                 : 'hover:bg-muted text-foreground'
             )}
+            aria-label={action.label}
           >
             <div className={cn(
               'w-10 h-10 rounded-full flex items-center justify-center',
@@ -202,11 +204,13 @@ export function FilterBottomSheet({
                       filter.onChange(newValue)
                     }}
                     className={cn(
-                      'px-4 py-2 rounded-full text-sm font-medium transition-all',
+                      'px-4 py-2 rounded-full text-sm font-medium transition-all min-h-[44px]',
                       isSelected
                         ? 'bg-gradient-to-r from-secondary to-primary text-white shadow-md scale-105'
                         : 'bg-muted text-muted-foreground hover:bg-muted/70'
                     )}
+                    aria-pressed={isSelected}
+                    aria-label={option.label}
                   >
                     {option.label}
                   </button>
@@ -223,7 +227,8 @@ export function FilterBottomSheet({
               onReset()
               onOpenChange(false)
             }}
-            className="flex-1 px-6 py-3 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors"
+            className="flex-1 px-6 py-3 rounded-xl border border-border text-foreground font-medium hover:bg-muted transition-colors min-h-[44px]"
+            aria-label="Reset filters"
           >
             Reset
           </button>
@@ -232,7 +237,8 @@ export function FilterBottomSheet({
               onApply()
               onOpenChange(false)
             }}
-            className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-secondary to-primary text-white font-medium shadow-lg hover:shadow-xl transition-all"
+            className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-secondary to-primary text-white font-medium shadow-lg hover:shadow-xl transition-all min-h-[44px]"
+            aria-label="Apply filters"
           >
             Apply Filters
           </button>

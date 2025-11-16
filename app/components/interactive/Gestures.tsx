@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Image from 'next/image'
 import { motion, useSpring, useMotionValue, useTransform, PanInfo } from 'framer-motion'
 import { Trash2, RefreshCw, ZoomOut } from 'lucide-react'
 import { cn } from '@/app/lib/utils'
@@ -245,13 +246,16 @@ export function PinchToZoom({
         animate={{ scale }}
         style={{ x, y }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="touch-none cursor-grab active:cursor-grabbing w-full h-full flex items-center justify-center"
+        className="touch-none cursor-grab active:cursor-grabbing w-full h-full flex items-center justify-center relative"
       >
-        <img
+        <Image
           src={src}
           alt={alt}
-          className="max-w-full max-h-full object-contain"
+          fill
+          sizes="100vw"
+          className="object-contain"
           draggable={false}
+          loading="lazy"
         />
       </motion.div>
 
