@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db';
+import { connectToDatabase } from '@/lib/db/db-client';
+import { UsageLimitsModel } from '@/lib/db/schemas/usage-limits.schema';
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,6 +43,21 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       provider: 'credentials',
       onboardingCompleted: false,
+    });
+
+    // Create usage limits with FREE tier
+    await connectToDatabase();
+    await UsageLimitsModel.create({
+      userId: user.id,
+      plan: 'free',
+      recipesGeneratedThisMonth: 0,
+      photoAnalysesThisMonth: 0,
+      aiChatMessagesThisMonth: 0,
+      totalSavedRecipes: 0,
+      totalFridgeItems: 0,
+      totalHabits: 0,
+      totalRoutines: 0,
+      lastResetDate: new Date(),
     });
 
     // Return user without password

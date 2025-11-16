@@ -1,9 +1,11 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import GitHubProvider from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { connectToDatabase } from "./db/db-client"
 import { UserModel } from "./db/schemas/user.schema"
+import { UsageLimitsModel } from "./db/schemas/usage-limits.schema"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // Note: We're not using MongoDBAdapter due to conflict with mongoose
@@ -19,6 +21,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           response_type: "code"
         }
       }
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
     CredentialsProvider({
       name: "credentials",
@@ -100,17 +106,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session
     },
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
+      if (account?.provider === "google" || account?.provider === "github") {
         await connectToDatabase()
 
         // Check if user exists
         const existingUser = await UserModel.findOne({ email: user.email })
 
-        if (existingUser && !existingUser.provider) {
-          // Update existing credentials user to OAuth
-          existingUser.provider = "google"
-          existingUser.image = user.image || undefined
-          await existingUser.save()
+        if (existingUser) {
+          // Update existing user with OAuth provider info
+          if (!existingUser.provider || existingUser.provider === "credentials") {
+            existingUser.provider = account.provider as "google" | "github"
+            existingUser.image = user.image || existingUser.image
+            existingUser.name = user.name || existingUser.name
+            await existingUser.save()
+          }
+        } else {
+          // Create new user for OAuth signup
+          const newUser = await UserModel.create({
+            email: user.email,
+            name: user.name || "User",
+            image: user.image,
+            provider: account.provider,
+            onboardingCompleted: false,
+          })
+
+          // Create usage limits with FREE tier for new OAuth users
+          await UsageLimitsModel.create({
+            userId: newUser._id.toString(),
+            plan: 'free',
+            recipesGeneratedThisMonth: 0,
+            photoAnalysesThisMonth: 0,
+            aiChatMessagesThisMonth: 0,
+            totalSavedRecipes: 0,
+            totalFridgeItems: 0,
+            totalHabits: 0,
+            totalRoutines: 0,
+            lastResetDate: new Date(),
+          })
         }
       }
 

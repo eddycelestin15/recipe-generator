@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import MobileHeader from "./components/MobileHeader";
 import BottomNavigation from "./components/BottomNavigation";
+import Footer from "./components/Footer";
 import FitnessInitializer from "./components/FitnessInitializer";
 import HabitsInitializer from "./components/HabitsInitializer";
 import AIInsightsInitializer from "./components/AIInsightsInitializer";
@@ -116,8 +117,11 @@ export default async function RootLayout({
           <AIInsightsInitializer />
           <InstallPrompt />
           <MobileHeader />
-          <div className="content-with-nav">
-            {children}
+          <div className="content-with-nav flex flex-col min-h-screen">
+            <div className="flex-1">
+              {children}
+            </div>
+            <Footer />
           </div>
           <BottomNavigation />
         </Providers>
