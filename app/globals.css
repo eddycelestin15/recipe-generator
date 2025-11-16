@@ -206,3 +206,36 @@ html {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
+
+/* Safe area insets for iOS */
+@supports (padding: env(safe-area-inset-top)) {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Mobile-first layout utilities */
+.content-with-nav {
+  padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  min-height: 100vh;
+}
+
+/* Smooth transitions for mobile interactions */
+@media (hover: none) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

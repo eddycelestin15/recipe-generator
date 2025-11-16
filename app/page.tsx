@@ -128,23 +128,23 @@ export default function Home() {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <main className="bg-background min-h-full p-4 md:p-6">
+      <div className="max-w-lg mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Générateur de Recettes IA
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-foreground-secondary text-base">
             Créez des recettes délicieuses avec vos ingrédients !
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Sidebar - Fridge Items */}
-          <div className="lg:col-span-1 space-y-4">
+        <div className="space-y-4">
+          {/* Fridge Items */}
+          <div className="space-y-4">
             {/* Quick Action */}
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="bg-card rounded-lg shadow-md p-4 border border-border">
               <button
                 onClick={handleGenerateFromFridge}
                 className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold py-3 px-4 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all flex items-center justify-center gap-2"
@@ -162,10 +162,10 @@ export default function Home() {
             </div>
 
             {/* Fridge Items Selection */}
-            <div className="bg-white rounded-lg shadow-md p-4 max-h-96 overflow-y-auto">
+            <div className="bg-card rounded-lg shadow-md p-4 max-h-80 overflow-y-auto border border-border">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-900">Mon Frigo ({fridgeItems.length})</h3>
-                <span className="text-sm text-gray-500">
+                <h3 className="font-semibold text-foreground">Mon Frigo ({fridgeItems.length})</h3>
+                <span className="text-sm text-foreground-tertiary">
                   {selectedFridgeItems.length} sélectionné(s)
                 </span>
               </div>
@@ -215,10 +215,10 @@ export default function Home() {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-4">
             {/* Manual Ingredients */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <label className="block text-gray-700 font-semibold mb-3">
+            <div className="bg-card rounded-lg shadow-md p-4 border border-border">
+              <label className="block text-foreground font-semibold mb-3 text-sm">
                 Ingrédients additionnels (optionnel)
               </label>
               <div className="relative">
@@ -234,7 +234,7 @@ export default function Home() {
             </div>
 
             {/* Filters */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-card rounded-lg shadow-md p-4 border border-border">
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className="w-full flex items-center justify-between mb-4"
@@ -362,7 +362,7 @@ export default function Home() {
             </div>
 
             {/* Generate Button */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-card rounded-lg shadow-md p-4 border border-border">
               {error && (
                 <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
                   {error}
@@ -423,7 +423,7 @@ export default function Home() {
 
             {/* Recipe Display */}
             {recipe && (
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-card rounded-lg shadow-md p-4 border border-border">
                 {/* Recipe Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
