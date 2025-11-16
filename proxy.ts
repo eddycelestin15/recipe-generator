@@ -5,9 +5,8 @@ export default auth((req) => {
   const { pathname } = req.nextUrl
   const isAuthenticated = !!req.auth
 
-  // Public routes that don't require authentication
+  // Public routes that don't require authentication (except homepage)
   const publicRoutes = [
-    "/",
     "/auth/signin",
     "/auth/signup",
     "/auth/error",
@@ -22,6 +21,7 @@ export default auth((req) => {
 
   // Routes that require authentication
   const protectedRoutes = [
+    "/",  // Homepage requires authentication
     "/profile",
     "/settings",
     "/auth/onboarding",
@@ -45,7 +45,13 @@ export default auth((req) => {
   })
 
   // Check if current path is protected
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+  const isProtectedRoute = protectedRoutes.some(route => {
+    // Exact match for homepage
+    if (route === "/" && pathname === "/") return true
+    // Starts with for other routes
+    if (route !== "/" && pathname.startsWith(route)) return true
+    return false
+  })
   const isProtectedApiRoute = protectedApiRoutes.some(route => pathname.startsWith(route))
 
   // Redirect authenticated users away from auth pages (except onboarding and signout)
