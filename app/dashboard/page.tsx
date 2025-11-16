@@ -32,33 +32,33 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="bg-background min-h-full flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement du dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-foreground-secondary">Chargement du dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="bg-background min-h-full">
+      <div className="max-w-lg mx-auto px-4 py-6">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard Santé</h1>
-          <p className="text-gray-600 mt-2">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard Santé</h1>
+          <p className="text-foreground-secondary mt-1 text-sm">
             Suivez vos progrès et atteignez vos objectifs
           </p>
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8">
+        <div className="mb-6">
           <QuickActions />
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <StatsCard
             title="Poids Actuel"
             value={summary?.currentWeight ? `${summary.currentWeight}kg` : 'N/A'}
@@ -101,10 +101,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Macros and Nutrition */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="space-y-4 mb-6">
           {/* Macros */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <h2 className="text-lg font-semibold text-foreground mb-4">
               Macronutriments Aujourd'hui
             </h2>
             <div className="grid grid-cols-3 gap-4">
@@ -129,13 +129,11 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Hydration & Favorites */}
-          <div className="space-y-6">
-            {/* Hydration */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Hydratation
-              </h3>
+          {/* Hydration */}
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <h3 className="text-base font-semibold text-foreground mb-3">
+              Hydratation
+            </h3>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-600">
                   {summary?.hydration.current || 0}ml / {summary?.hydration.goal || 2000}ml
@@ -154,11 +152,11 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Favorite Recipes */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Recettes Favorites (Cette Semaine)
-              </h3>
+          {/* Favorite Recipes */}
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <h3 className="text-base font-semibold text-foreground mb-3">
+              Recettes Favorites (Cette Semaine)
+            </h3>
               {summary?.favoriteRecipes && summary.favoriteRecipes.length > 0 ? (
                 <ul className="space-y-2">
                   {summary.favoriteRecipes.map((recipe) => (
@@ -172,51 +170,50 @@ export default function DashboardPage() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-foreground-tertiary">
                   Aucune recette cette semaine
                 </p>
               )}
-            </div>
           </div>
         </div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-3">
           <Link
             href="/analytics"
-            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+            className="bg-card border border-border rounded-lg shadow p-4 hover:shadow-md transition-shadow group"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Analytics</h3>
-              <TrendingUp className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-base font-semibold text-foreground">Analytics</h3>
+              <TrendingUp className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-foreground-secondary">
               Visualisez vos tendances et progrès détaillés
             </p>
           </Link>
 
           <Link
             href="/progress"
-            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+            className="bg-card border border-border rounded-lg shadow p-4 hover:shadow-md transition-shadow group"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Progression</h3>
-              <Scale className="w-6 h-6 text-green-600 group-hover:scale-110 transition-transform" />
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-base font-semibold text-foreground">Progression</h3>
+              <Scale className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-foreground-secondary">
               Suivez votre poids et vos mesures corporelles
             </p>
           </Link>
 
           <Link
             href="/goals"
-            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+            className="bg-card border border-border rounded-lg shadow p-4 hover:shadow-md transition-shadow group"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Objectifs</h3>
-              <Calendar className="w-6 h-6 text-purple-600 group-hover:scale-110 transition-transform" />
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-base font-semibold text-foreground">Objectifs</h3>
+              <Calendar className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-foreground-secondary">
               Gérez vos objectifs et milestones
             </p>
           </Link>
