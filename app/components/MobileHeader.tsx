@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChefHat, Bell, Menu, Crown, CreditCard, Settings, Calendar, MessageCircle } from 'lucide-react';
+import { ChefHat, Bell, Menu, Crown, CreditCard, Settings, Calendar, MessageCircle, Refrigerator } from 'lucide-react';
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
@@ -32,20 +32,29 @@ export default function MobileHeader() {
               </span>
             )}
 
+            {/* Smart Fridge */}
+            <Link
+              href="/fridge"
+              className="p-2 rounded-full hover:bg-muted transition-all duration-200"
+              title="Smart Fridge"
+            >
+              <Refrigerator className="w-5 h-5 text-foreground-secondary" />
+            </Link>
+
             {/* Meal Planning */}
             <Link
-              href="/weekly-planning"
+              href="/meal-planning"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
-              title="Weekly Meal Planning"
+              title="Meal Planning"
             >
               <Calendar className="w-5 h-5 text-foreground-secondary" />
             </Link>
 
-            {/* AI Nutritionist */}
+            {/* AI Coach */}
             <Link
-              href="/ai-nutritionist"
+              href="/ai-coach"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
-              title="AI Nutritionist"
+              title="AI Coach"
             >
               <MessageCircle className="w-5 h-5 text-foreground-secondary" />
             </Link>
