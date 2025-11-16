@@ -177,6 +177,13 @@
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animations */
+  --animation-shimmer: shimmer 2s infinite;
+  --animation-wave: wave 1.5s ease-in-out infinite;
+  --animation-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animation-fade-in: fadeIn 0.3s ease-in;
+  --animation-slide-in: slideIn 0.3s ease-out;
 }
 
 * {
@@ -248,4 +255,74 @@ html {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Skeleton Loading Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animation utility classes */
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-wave {
+  animation: wave 1.5s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Loading spinner */
+.spinner {
+  border: 2px solid var(--muted);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -8,6 +8,7 @@ import MacroCircle from '../components/dashboard/MacroCircle';
 import QuickActions from '../components/dashboard/QuickActions';
 import StoriesCarousel from '../components/stories/StoriesCarousel';
 import PullToRefreshWrapper from '../components/stories/PullToRefreshWrapper';
+import { DashboardSkeleton } from '../components/dashboard/skeletons/DashboardSkeleton';
 import { useStories } from '../hooks/useStories';
 import type { DashboardSummary } from '../lib/types/health-dashboard';
 
@@ -52,14 +53,7 @@ export default function DashboardPage() {
   };
 
   if (loading) {
-    return (
-      <div className="bg-background min-h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-foreground-secondary">Chargement du dashboard...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

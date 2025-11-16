@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Recipe } from '@/app/lib/types/recipe';
 import { Heart, MessageCircle, Send, Bookmark, Flame, Clock, ChefHat } from 'lucide-react';
 import Link from 'next/link';
@@ -13,6 +14,8 @@ interface RecipeCardProps {
 
 export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: RecipeCardProps) {
   const router = useRouter();
+  // Optimistic UI state for favorite
+  const [isFavoriteOptimistic, setIsFavoriteOptimistic] = useState(recipe.isFavorite);
 
   // Calculate time ago from createdDate
   const getTimeAgo = (date: Date) => {
@@ -69,6 +72,9 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    // Optimistic UI update - update immediately for smooth UX
+    setIsFavoriteOptimistic(!isFavoriteOptimistic);
+    // Then call the actual update
     onToggleFavorite(recipe.id);
   };
 
@@ -147,12 +153,12 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
             {/* Like/Favorite */}
             <button
               onClick={handleFavoriteClick}
-              className="group/heart hover:scale-110 transition-transform duration-200"
-              aria-label={recipe.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              className="group/heart hover:scale-110 transition-transform duration-200 active:scale-95"
+              aria-label={isFavoriteOptimistic ? 'Remove from favorites' : 'Add to favorites'}
             >
               <Heart
                 className={`w-7 h-7 transition-all duration-200 ${
-                  recipe.isFavorite
+                  isFavoriteOptimistic
                     ? 'fill-red-500 text-red-500 animate-pulse'
                     : 'text-gray-800 group-hover/heart:text-gray-500'
                 }`}
@@ -182,12 +188,12 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
           {/* Right action - Bookmark/Save */}
           <button
             onClick={handleFavoriteClick}
-            className="hover:scale-110 transition-transform duration-200"
+            className="hover:scale-110 transition-transform duration-200 active:scale-95"
             aria-label="Save recipe"
           >
             <Bookmark
               className={`w-7 h-7 transition-all duration-200 ${
-                recipe.isFavorite
+                isFavoriteOptimistic
                   ? 'fill-gray-800 text-gray-800'
                   : 'text-gray-800 hover:text-gray-500'
               }`}

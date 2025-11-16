@@ -6,6 +6,7 @@ import { NutritionCircle } from '@/app/components/nutrition/NutritionCircle';
 import { MealTimeline } from '@/app/components/nutrition/MealTimeline';
 import { WaterIntake } from '@/app/components/nutrition/WaterIntake';
 import { CaloriesBurnedWidget } from '@/app/components/fitness/CaloriesBurnedWidget';
+import { NutritionPageSkeleton } from '@/app/components/nutrition/skeletons/NutritionPageSkeleton';
 import { Calendar, TrendingUp, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -125,14 +126,7 @@ export default function NutritionDashboard() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
-        </div>
-      </div>
-    );
+    return <NutritionPageSkeleton />;
   }
 
   if (!stats) {

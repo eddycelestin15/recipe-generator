@@ -8,6 +8,8 @@ import { Input } from "@/app/components/ui/input"
 import { Label } from "@/app/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/ui/select"
+import { ProfileSkeleton } from "@/app/components/profile/skeletons/ProfileSkeleton"
+import { Spinner } from "@/app/components/ui/spinner"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -47,7 +49,7 @@ export default function ProfilePage() {
   }, [user])
 
   if (isLoading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>
+    return <ProfileSkeleton />;
   }
 
   if (!user) {
@@ -284,7 +286,8 @@ export default function ProfilePage() {
           </div>
         )}
 
-        <Button type="submit" size="lg" disabled={loading}>
+        <Button type="submit" size="lg" disabled={loading} className="relative">
+          {loading && <Spinner size="sm" className="mr-2" />}
           {loading ? "Saving..." : "Save Changes"}
         </Button>
       </form>
