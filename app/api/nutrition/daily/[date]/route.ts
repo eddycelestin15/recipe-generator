@@ -13,10 +13,11 @@ import type { DailyNutritionStats } from '@/app/lib/types/nutrition';
 
 export async function GET(
   request: Request,
-  { params }: { params: { date: string } }
+  { params }: { params: Promise<{ date: string }> }
 ) {
   try {
-    const date = new Date(params.date);
+    const { date: dateParam } = await params;
+    const date = new Date(dateParam);
 
     if (isNaN(date.getTime())) {
       return NextResponse.json(

@@ -41,7 +41,7 @@ export class MongoUsageLimitsRepository {
 
     if (!limits) {
       const now = new Date();
-      limits = await UsageLimitsModel.create({
+      const newLimits = await UsageLimitsModel.create({
         userId,
         plan,
         recipesGeneratedThisMonth: 0,
@@ -54,7 +54,7 @@ export class MongoUsageLimitsRepository {
         lastResetDate: now,
       });
 
-      return limits.toObject();
+      return newLimits.toObject();
     }
 
     // Check if monthly counters need reset
