@@ -24,6 +24,7 @@ import type {
 import { categorizeIngredient, generateWeekDays, MEAL_PREP_FRIENDLY_TAGS } from '../types/meal-plan';
 import { RecipeRepository } from '../repositories/recipe-repository';
 import { FridgeRepository } from '../repositories/fridge-repository';
+import {text} from "node:stream/consumers";
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -83,7 +84,7 @@ export class MealPlanService {
       );
 
       // Generate plan using Gemini
-      const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
@@ -108,6 +109,7 @@ export class MealPlanService {
       return days;
     } catch (error) {
       console.error('Error generating meal plan:', error);
+      console.log('Error:', error);
       throw new Error('Failed to generate meal plan');
     }
   }
