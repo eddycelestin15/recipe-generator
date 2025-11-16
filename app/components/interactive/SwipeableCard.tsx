@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion'
 import { useState } from 'react'
+import Image from 'next/image'
 import { Heart, X, Star, ChefHat } from 'lucide-react'
 
 export interface SwipeableCardProps {
@@ -224,10 +225,13 @@ export function SwipeableCards({
               {/* Image */}
               <div className="relative w-full h-80 bg-gradient-to-br from-secondary/20 to-primary/20">
                 {card.image ? (
-                  <img
+                  <Image
                     src={card.image}
                     alt={card.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 448px"
+                    className="object-cover"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">

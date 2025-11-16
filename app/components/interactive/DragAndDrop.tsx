@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 import {
   DndContext,
   closestCenter,
@@ -121,11 +122,14 @@ export function DraggableMealCard({ meal, showGrip = true, compact = false }: Dr
           )}
 
           {meal.image && !compact && (
-            <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden flex-shrink-0">
-              <img
+            <div className="w-16 h-16 rounded-lg bg-muted overflow-hidden flex-shrink-0 relative">
+              <Image
                 src={meal.image}
                 alt={meal.name}
-                className="w-full h-full object-cover"
+                fill
+                sizes="64px"
+                className="object-cover"
+                loading="lazy"
               />
             </div>
           )}

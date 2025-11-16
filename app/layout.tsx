@@ -20,9 +20,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Recipe Health App - AI Recipe Generator & Smart Fridge",
-  description: "AI-powered recipe generator with health tracking, smart fridge management, and personalized nutrition",
+  title: {
+    default: "Recipe Health App - AI Recipe Generator & Smart Fridge",
+    template: "%s | Recipe Health App"
+  },
+  description: "AI-powered recipe generator with health tracking, smart fridge management, and personalized nutrition. Create delicious recipes with ingredients you have, track your meals, and achieve your fitness goals.",
   applicationName: "Recipe Health App",
+  keywords: ["recipe generator", "AI recipes", "health tracking", "nutrition", "smart fridge", "meal planning", "fitness", "diet"],
+  authors: [{ name: "Recipe Health Team" }],
+  creator: "Recipe Health Team",
+  publisher: "Recipe Health Team",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -32,6 +39,23 @@ export const metadata: Metadata = {
     telephone: false,
   },
   manifest: "/manifest.json",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" }
+  ],
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    url: "https://recipehealth.app",
+    title: "Recipe Health App - AI Recipe Generator & Smart Fridge",
+    description: "AI-powered recipe generator with health tracking, smart fridge management, and personalized nutrition",
+    siteName: "Recipe Health App",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Recipe Health App - AI Recipe Generator",
+    description: "AI-powered recipe generator with health tracking and smart fridge management",
+  },
   icons: {
     icon: [
       { url: "/icon-72x72.png", sizes: "72x72", type: "image/png" },
@@ -47,6 +71,17 @@ export const metadata: Metadata = {
       { url: "/icon-152x152.png", sizes: "152x152", type: "image/png" },
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
