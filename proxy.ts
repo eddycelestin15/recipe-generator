@@ -5,7 +5,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl
   const isAuthenticated = !!req.auth
 
-  // Public routes that don't require authentication (except homepage)
+  // Public routes that don't require authentication
   const publicRoutes = [
     "/auth/signin",
     "/auth/signup",
@@ -19,20 +19,6 @@ export default auth((req) => {
     "/legal/disclaimer",
   ]
 
-  // Routes that require authentication
-  const protectedRoutes = [
-    "/",  // Homepage requires authentication
-    "/profile",
-    "/settings",
-    "/auth/onboarding",
-  ]
-
-  // API routes that require authentication
-  const protectedApiRoutes = [
-    "/api/users",
-    "/api/fridge-items",
-  ]
-
   // Allow all API auth routes
   if (pathname.startsWith("/api/auth")) {
     return NextResponse.next()
@@ -40,45 +26,56 @@ export default auth((req) => {
 
   // Check if current path is public
   const isPublicRoute = publicRoutes.some(route => {
-    if (route === pathname) return true
     return pathname === route || pathname.startsWith(`${route}/`)
   })
 
-  // Check if current path is protected
-  const isProtectedRoute = protectedRoutes.some(route => {
-    // Exact match for homepage
-    if (route === "/" && pathname === "/") return true
-    // Starts with for other routes
-    if (route !== "/" && pathname.startsWith(route)) return true
-    return false
-  })
-  const isProtectedApiRoute = protectedApiRoutes.some(route => pathname.startsWith(route))
+  // HANDLE UNAUTHENTICATED USERS
+  if (!isAuthenticated) {
+    // Allow access to public routes
+    if (isPublicRoute) {
+      return NextResponse.next()
+    }
+
+    // Redirect to signin with callback URL for all other routes
+    const signInUrl = new URL("/auth/signin", req.nextUrl.origin)
+
+    // Store callback URL (use /dashboard for root path to avoid loops)
+    const callbackUrl = pathname === "/" ? "/dashboard" : pathname
+    signInUrl.searchParams.set("callbackUrl", callbackUrl)
+
+    return NextResponse.redirect(signInUrl)
+  }
+
+  // HANDLE AUTHENTICATED USERS
+  const onboardingCompleted = req.auth?.user?.onboardingCompleted ?? false
 
   // Redirect authenticated users away from auth pages (except onboarding and signout)
   if (
-    isAuthenticated &&
-    (pathname.startsWith("/auth/signin") ||
-      pathname.startsWith("/auth/signup") ||
-      pathname.startsWith("/auth/forgot-password") ||
-      pathname.startsWith("/auth/reset-password"))
+    pathname.startsWith("/auth/signin") ||
+    pathname.startsWith("/auth/signup") ||
+    pathname.startsWith("/auth/forgot-password") ||
+    pathname.startsWith("/auth/reset-password")
   ) {
-    return NextResponse.redirect(new URL("/", req.nextUrl.origin))
+    // If onboarding not completed, redirect to onboarding
+    if (!onboardingCompleted) {
+      return NextResponse.redirect(new URL("/auth/onboarding", req.nextUrl.origin))
+    }
+
+    // Otherwise redirect to dashboard
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin))
   }
 
-  // Redirect unauthenticated users to signin (without callbackUrl for cleaner URLs)
-  if (!isAuthenticated && (isProtectedRoute || isProtectedApiRoute)) {
-    return NextResponse.redirect(new URL("/auth/signin", req.nextUrl.origin))
+  // Check if user has completed onboarding
+  if (!onboardingCompleted && pathname !== "/auth/onboarding") {
+    // Only redirect if not on onboarding page and not on API/public routes
+    if (!isPublicRoute && !pathname.startsWith("/api")) {
+      return NextResponse.redirect(new URL("/auth/onboarding", req.nextUrl.origin))
+    }
   }
 
-  // Check if user has completed onboarding (except for onboarding page itself)
-  if (
-    isAuthenticated &&
-    !req.auth?.user?.onboardingCompleted &&
-    pathname !== "/auth/onboarding" &&
-    !isPublicRoute &&
-    !pathname.startsWith("/api")
-  ) {
-    return NextResponse.redirect(new URL("/auth/onboarding", req.nextUrl.origin))
+  // Redirect root path to dashboard
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin))
   }
 
   return NextResponse.next()
