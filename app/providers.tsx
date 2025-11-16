@@ -4,8 +4,18 @@ import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 import { useEffect, useState } from "react"
+import { NextIntlClientProvider } from "next-intl"
+import LocaleProvider from "./components/LocaleProvider"
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  locale,
+  messages
+}: {
+  children: React.ReactNode
+  locale: string
+  messages: any
+}) {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -20,14 +30,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange={false}
-      >
-        {children}
-        <Toaster
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
+        >
+          <LocaleProvider>
+            {children}
+          </LocaleProvider>
+          <Toaster
           position={isMobile ? "top-center" : "bottom-right"}
           toastOptions={{
             style: {
@@ -43,7 +56,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           closeButton
           duration={4000}
         />
-      </ThemeProvider>
+        </ThemeProvider>
+      </NextIntlClientProvider>
     </SessionProvider>
   )
 }
