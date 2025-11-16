@@ -5,6 +5,7 @@
  */
 
 import type {
+import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
   Subscription,
   CreateSubscriptionDTO,
   UpdateSubscriptionDTO,
@@ -19,10 +20,10 @@ export class SubscriptionRepository {
    * Get the current user ID from localStorage
    */
   private static getUserId(): string {
-    let userId = localStorage.getItem('current_user_id');
+    let userId = getItem('current_user_id');
     if (!userId) {
       userId = 'default_user';
-      localStorage.setItem('current_user_id', userId);
+      setItem('current_user_id', userId);
     }
     return userId;
   }
@@ -38,7 +39,7 @@ export class SubscriptionRepository {
    * Get subscription from localStorage
    */
   private static getSubscriptionFromStorage(): Subscription | null {
-    const data = localStorage.getItem(this.getStorageKey());
+    const data = getItem(this.getStorageKey());
     if (!data) return null;
 
     try {
@@ -61,7 +62,7 @@ export class SubscriptionRepository {
    * Save subscription to localStorage
    */
   private static saveSubscriptionToStorage(subscription: Subscription): void {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(subscription));
+    setItem(this.getStorageKey(), JSON.stringify(subscription));
   }
 
   /**
@@ -162,7 +163,7 @@ export class SubscriptionRepository {
     const subscription = this.getSubscriptionFromStorage();
     if (!subscription) return false;
 
-    localStorage.removeItem(this.getStorageKey());
+    removeItem(this.getStorageKey());
     return true;
   }
 

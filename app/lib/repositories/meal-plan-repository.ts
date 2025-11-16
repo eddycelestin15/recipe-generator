@@ -15,6 +15,7 @@ import type {
   DailyMealSummary,
 } from '../types/meal-plan';
 import { getWeekStart, getWeekEnd, generateWeekDays } from '../types/meal-plan';
+import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
 
 /**
  * Generate a unique ID for meal plans
@@ -30,10 +31,10 @@ export class MealPlanRepository {
    * Get the current user ID from localStorage
    */
   private static getUserId(): string {
-    let userId = localStorage.getItem('current_user_id');
+    let userId = getItem('current_user_id');
     if (!userId) {
       userId = 'default_user';
-      localStorage.setItem('current_user_id', userId);
+      setItem('current_user_id', userId);
     }
     return userId;
   }
@@ -49,7 +50,7 @@ export class MealPlanRepository {
    * Get all meal plans from localStorage
    */
   private static getAllMealPlansFromStorage(): MealPlan[] {
-    const data = localStorage.getItem(this.getStorageKey());
+    const data = getItem(this.getStorageKey());
     if (!data) return [];
 
     try {
@@ -77,7 +78,7 @@ export class MealPlanRepository {
    * Save all meal plans to localStorage
    */
   private static saveAllMealPlansToStorage(mealPlans: MealPlan[]): void {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(mealPlans));
+    setItem(this.getStorageKey(), JSON.stringify(mealPlans));
   }
 
   /**
@@ -354,6 +355,6 @@ export class MealPlanRepository {
    * Delete all meal plans (for testing/reset purposes)
    */
   static deleteAll(): void {
-    localStorage.removeItem(this.getStorageKey());
+    removeItem(this.getStorageKey());
   }
 }

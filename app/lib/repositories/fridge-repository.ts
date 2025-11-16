@@ -1,4 +1,5 @@
 import { FridgeItem, CreateFridgeItemDTO, UpdateFridgeItemDTO } from '../types/fridge';
+import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
 
 const STORAGE_KEY = 'smart_fridge_items';
 
@@ -6,10 +7,10 @@ export class FridgeRepository {
   private static getUserId(): string {
     // Pour le moment, on utilise un userId par défaut
     // À remplacer par l'authentification réelle plus tard
-    let userId = localStorage.getItem('current_user_id');
+    let userId = getItem('current_user_id');
     if (!userId) {
       userId = 'default_user';
-      localStorage.setItem('current_user_id', userId);
+      setItem('current_user_id', userId);
     }
     return userId;
   }
@@ -22,7 +23,7 @@ export class FridgeRepository {
     if (typeof window === 'undefined') return [];
 
     const key = this.getStorageKey(userId);
-    const data = localStorage.getItem(key);
+    const data = getItem(key);
 
     if (!data) return [];
 
@@ -44,7 +45,7 @@ export class FridgeRepository {
     if (typeof window === 'undefined') return;
 
     const key = this.getStorageKey(userId);
-    localStorage.setItem(key, JSON.stringify(items));
+    setItem(key, JSON.stringify(items));
   }
 
   static async getAll(): Promise<FridgeItem[]> {
@@ -137,6 +138,6 @@ export class FridgeRepository {
   static async deleteAll(): Promise<void> {
     const userId = this.getUserId();
     const key = this.getStorageKey(userId);
-    localStorage.removeItem(key);
+    removeItem(key);
   }
 }
