@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChefHat, Bell, Menu, Crown, CreditCard, Settings } from 'lucide-react';
+import { ChefHat, Bell, Menu, Crown, CreditCard, Settings, Calendar, MessageCircle } from 'lucide-react';
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
@@ -31,6 +31,24 @@ export default function MobileHeader() {
                 {trialDaysRemaining}d
               </span>
             )}
+
+            {/* Meal Planning */}
+            <Link
+              href="/weekly-planning"
+              className="p-2 rounded-full hover:bg-muted transition-all duration-200"
+              title="Weekly Meal Planning"
+            >
+              <Calendar className="w-5 h-5 text-foreground-secondary" />
+            </Link>
+
+            {/* AI Nutritionist */}
+            <Link
+              href="/ai-nutritionist"
+              className="p-2 rounded-full hover:bg-muted transition-all duration-200"
+              title="AI Nutritionist"
+            >
+              <MessageCircle className="w-5 h-5 text-foreground-secondary" />
+            </Link>
 
             {/* Theme toggle */}
             <ThemeToggle />

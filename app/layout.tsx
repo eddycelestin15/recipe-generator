@@ -8,6 +8,8 @@ import FitnessInitializer from "./components/FitnessInitializer";
 import HabitsInitializer from "./components/HabitsInitializer";
 import AIInsightsInitializer from "./components/AIInsightsInitializer";
 import InstallPrompt from "./components/InstallPrompt";
+import { cookies } from "next/headers";
+import { getMessages } from "next-intl/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -93,17 +95,22 @@ export const viewport: Viewport = {
   viewportFit: 'cover', // Important for iOS safe areas
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get locale from cookies or default to 'en'
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('locale')?.value || 'en';
+  const messages = await getMessages({ locale });
+
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
+        <Providers locale={locale} messages={messages}>
           <FitnessInitializer />
           <HabitsInitializer />
           <AIInsightsInitializer />

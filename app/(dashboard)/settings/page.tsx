@@ -74,8 +74,16 @@ export default function SettingsPage() {
         throw new Error("Failed to update settings")
       }
 
+      // Update locale cookie
+      document.cookie = `locale=${settings.language}; path=/; max-age=31536000`
+
       setMessage("Settings updated successfully!")
       await updateSession()
+
+      // Reload page to apply new locale
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
     } catch (error) {
       setError("Failed to update settings. Please try again.")
     } finally {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target, Sparkles, Brain, Crown, User, CreditCard } from 'lucide-react';
+import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target, Sparkles, Brain, Crown, User, CreditCard, MessageCircle } from 'lucide-react';
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
 import ThemeToggle from '@/app/components/ThemeToggle';
@@ -153,6 +153,24 @@ export default function Navigation() {
                 </Link>
               );
             })}
+
+            {/* Meal Planning Icon */}
+            <Link
+              href="/weekly-planning"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-foreground-secondary hover:bg-muted hover:text-foreground transition-all duration-200"
+              title="Weekly Meal Planning"
+            >
+              <Calendar className="w-5 h-5" />
+            </Link>
+
+            {/* AI Nutritionist Icon */}
+            <Link
+              href="/ai-nutritionist"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-foreground-secondary hover:bg-muted hover:text-foreground transition-all duration-200"
+              title="AI Nutritionist"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </Link>
 
             {/* Theme Toggle */}
             <ThemeToggle />
