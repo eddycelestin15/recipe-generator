@@ -101,6 +101,6 @@ export const FilterBottomSheet = dynamic(
 )
 
 export const CameraCapture = dynamic(
-  () => import('./CameraCapture'),
+  () => import('./CameraCapture').then(mod => ({ default: mod.CameraCapture })),
   { ssr: false }
 )
