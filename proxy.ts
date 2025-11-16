@@ -7,9 +7,17 @@ export default auth((req) => {
 
   // Public routes that don't require authentication
   const publicRoutes = [
+    "/",
     "/auth/signin",
     "/auth/signup",
     "/auth/error",
+    "/auth/signout",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+    "/legal/terms",
+    "/legal/privacy",
+    "/legal/cookies",
+    "/legal/disclaimer",
   ]
 
   // Routes that require authentication
@@ -25,15 +33,29 @@ export default auth((req) => {
     "/api/fridge-items",
   ]
 
+  // Allow all API auth routes
+  if (pathname.startsWith("/api/auth")) {
+    return NextResponse.next()
+  }
+
   // Check if current path is public
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === pathname) return true
+    return pathname === route || pathname.startsWith(`${route}/`)
+  })
 
   // Check if current path is protected
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
   const isProtectedApiRoute = protectedApiRoutes.some(route => pathname.startsWith(route))
 
-  // Redirect authenticated users away from auth pages
-  if (isAuthenticated && isPublicRoute) {
+  // Redirect authenticated users away from auth pages (except onboarding and signout)
+  if (
+    isAuthenticated &&
+    (pathname.startsWith("/auth/signin") ||
+      pathname.startsWith("/auth/signup") ||
+      pathname.startsWith("/auth/forgot-password") ||
+      pathname.startsWith("/auth/reset-password"))
+  ) {
     return NextResponse.redirect(new URL("/", req.url))
   }
 
@@ -65,8 +87,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
+     * - public folder and images
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 }
