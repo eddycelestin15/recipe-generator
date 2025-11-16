@@ -6,6 +6,7 @@ import { Toaster } from "sonner"
 import { useEffect, useState } from "react"
 import { NextIntlClientProvider } from "next-intl"
 import LocaleProvider from "./components/LocaleProvider"
+import SessionLoadingProvider from "./components/SessionLoadingProvider"
 
 export function Providers({
   children,
@@ -38,7 +39,9 @@ export function Providers({
           disableTransitionOnChange={false}
         >
           <LocaleProvider>
-            {children}
+            <SessionLoadingProvider>
+              {children}
+            </SessionLoadingProvider>
           </LocaleProvider>
           <Toaster
           position={isMobile ? "top-center" : "bottom-right"}

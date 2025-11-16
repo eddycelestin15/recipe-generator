@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import MobileHeader from "./components/MobileHeader";
-import BottomNavigation from "./components/BottomNavigation";
+import ConditionalNav from "./components/ConditionalNav";
 import FitnessInitializer from "./components/FitnessInitializer";
 import HabitsInitializer from "./components/HabitsInitializer";
 import AIInsightsInitializer from "./components/AIInsightsInitializer";
@@ -115,11 +114,10 @@ export default async function RootLayout({
           <HabitsInitializer />
           <AIInsightsInitializer />
           <InstallPrompt />
-          <MobileHeader />
+          <ConditionalNav />
           <div className="content-with-nav">
             {children}
           </div>
-          <BottomNavigation />
         </Providers>
       </body>
     </html>
