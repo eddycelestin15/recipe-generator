@@ -5,17 +5,32 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { usageLimitsRepository } from '@/lib/db/repositories/usage-limits.repository';
+import { subscriptionRepository } from '@/lib/db/repositories/subscription.repository';
 
 export async function GET(request: NextRequest) {
   try {
-    // Since we're using localStorage client-side, we'll return
-    // a simple response. The actual data fetching happens client-side.
-    // This endpoint is here for future backend integration.
+    // Get authenticated user session
+    const session = await auth();
 
-    return NextResponse.json({
-      message: 'Use client-side UsageLimitsRepository for localStorage-based apps',
-      clientSide: true,
-    });
+    if (!session || !session.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Get subscription to determine plan
+    const subscription = await subscriptionRepository.getOrCreate(session.user.email);
+
+    // Get or create usage limits for user
+    const usageLimits = await usageLimitsRepository.getOrCreate(
+      session.user.email,
+      subscription.plan
+    );
+
+    return NextResponse.json(usageLimits);
   } catch (error: any) {
     console.error('Error fetching usage limits:', error);
     return NextResponse.json(

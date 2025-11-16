@@ -5,17 +5,25 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { subscriptionRepository } from '@/lib/db/repositories/subscription.repository';
 
 export async function GET(request: NextRequest) {
   try {
-    // Since we're using localStorage client-side, we'll return
-    // a simple response. The actual data fetching happens client-side.
-    // This endpoint is here for future backend integration.
+    // Get authenticated user session
+    const session = await auth();
 
-    return NextResponse.json({
-      message: 'Use client-side SubscriptionRepository for localStorage-based apps',
-      clientSide: true,
-    });
+    if (!session || !session.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Get or create subscription for user
+    const subscription = await subscriptionRepository.getOrCreate(session.user.email);
+
+    return NextResponse.json(subscription);
   } catch (error: any) {
     console.error('Error fetching subscription status:', error);
     return NextResponse.json(
