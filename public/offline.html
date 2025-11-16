@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hors ligne - Recipe Health App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: #1f2937;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 48px 32px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .icon-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .wifi-icon {
+      width: 64px;
+      height: 64px;
+      position: relative;
+    }
+
+    .wifi-icon::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: white;
+      clip-path: path('M32 48c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-16c-6.6 0-12 5.4-12 12h4c0-4.4 3.6-8 8-8s8 3.6 8 8h4c0-6.6-5.4-12-12-12zm0-16C18.7 16 7.1 21.6 0 30.7l4 4C11.3 26.4 21.3 20 32 20s20.7 6.4 28 14.7l4-4C56.9 21.6 45.3 16 32 16z');
+    }
+
+    .wifi-slash {
+      position: absolute;
+      width: 80%;
+      height: 4px;
+      background: white;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%) rotate(-45deg);
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    p {
+      font-size: 16px;
+      color: #6b7280;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .features {
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .feature-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .feature-text {
+      flex: 1;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .feature-description {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .online-status {
+      margin-top: 24px;
+      padding: 12px;
+      background: #fef3c7;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #92400e;
+      display: none;
+    }
+
+    .online-status.online {
+      background: #d1fae5;
+      color: #065f46;
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 32px 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon-container">
+      <div class="wifi-icon">
+        <div class="wifi-slash"></div>
+      </div>
+    </div>
+
+    <h1>Vous êtes hors ligne</h1>
+    <p>Impossible de se connecter à internet. Certaines fonctionnalités peuvent être limitées.</p>
+
+    <div class="features">
+      <div class="feature-item">
+        <div class="feature-icon">✓</div>
+        <div class="feature-text">
+          <div class="feature-title">Pages en cache</div>
+          <p class="feature-description">Les pages déjà visitées sont disponibles hors ligne</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">✓</div>
+        <div class="feature-text">
+          <div class="feature-title">Données locales</div>
+          <p class="feature-description">Vos recettes et données sont sauvegardées</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">✓</div>
+        <div class="feature-text">
+          <div class="feature-title">Synchronisation automatique</div>
+          <p class="feature-description">Tout sera synchronisé une fois reconnecté</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="button" onclick="window.location.reload()">
+      Réessayer
+    </button>
+
+    <div id="online-status" class="online-status">
+      ✓ Connexion rétablie ! Cliquez sur Réessayer.
+    </div>
+  </div>
+
+  <script>
+    // Check for online status
+    function updateOnlineStatus() {
+      const status = document.getElementById('online-status');
+      if (navigator.onLine) {
+        status.classList.add('online');
+      } else {
+        status.classList.remove('online');
+      }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    // Initial check
+    updateOnlineStatus();
+
+    // Auto-reload when back online
+    window.addEventListener('online', () => {
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
