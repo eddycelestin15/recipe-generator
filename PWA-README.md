@@ -213,9 +213,14 @@ Aucune variable spéciale requise pour la PWA.
 
 ### Erreurs de build
 
-- Si problème avec Turbopack : utilisez `npm run build -- --webpack`
-- Si problème avec les polices : vérifiez votre connexion internet
-- Vérifiez que next-pwa est bien installé : `npm list next-pwa`
+- **Problème TypeScript avec next-pwa** : Résolu avec le fichier `next-pwa.d.ts` inclus
+- **Si problème avec Turbopack** : utilisez `npm run build -- --webpack`
+- **Si problème avec les polices Google Fonts** :
+  - C'est un problème de réseau pendant le build, pas lié à la PWA
+  - Les messages `[PWA] Compile...` confirment que la PWA fonctionne correctement
+  - En production (Vercel/Netlify), le build fonctionnera normalement avec accès internet
+  - Alternative : Utilisez des polices locales ou système au lieu de Google Fonts
+- **Vérifier l'installation** : `npm list next-pwa` (devrait afficher version 5.6.0)
 
 ## 📚 Ressources
 
