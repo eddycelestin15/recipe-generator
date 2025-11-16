@@ -7,6 +7,7 @@ import RecipeCard from '../components/recipes/RecipeCard';
 import RecipeFilters from '../components/recipes/RecipeFilters';
 import StoriesCarousel from '../components/stories/StoriesCarousel';
 import PullToRefreshWrapper from '../components/stories/PullToRefreshWrapper';
+import { RecipesPageSkeleton } from '../components/recipes/skeletons/RecipesPageSkeleton';
 import { useStories } from '../hooks/useStories';
 import { Plus, Grid, List } from 'lucide-react';
 import Link from 'next/link';
@@ -24,6 +25,7 @@ export default function RecipesPage() {
   });
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<RecipeStats>({
     totalRecipes: 0,
     favoriteCount: 0,
@@ -44,14 +46,19 @@ export default function RecipesPage() {
   }, [recipes, filters, sortOptions]);
 
   const loadRecipes = () => {
-    const allRecipes = RecipeRepository.getAll();
-    setRecipes(allRecipes);
+    setLoading(true);
+    // Simulate async loading for better UX with skeleton
+    setTimeout(() => {
+      const allRecipes = RecipeRepository.getAll();
+      setRecipes(allRecipes);
 
-    const tags = RecipeRepository.getAllTags();
-    setAvailableTags(tags);
+      const tags = RecipeRepository.getAllTags();
+      setAvailableTags(tags);
 
-    const recipeStats = RecipeRepository.getStats();
-    setStats(recipeStats);
+      const recipeStats = RecipeRepository.getStats();
+      setStats(recipeStats);
+      setLoading(false);
+    }, 300);
   };
 
   const applyFiltersAndSort = () => {
@@ -83,6 +90,10 @@ export default function RecipesPage() {
     loadRecipes();
     await refreshStories();
   };
+
+  if (loading) {
+    return <RecipesPageSkeleton />;
+  }
 
   return (
     <PullToRefreshWrapper onRefresh={handleRefresh}>

@@ -13,6 +13,7 @@ import {
   Plus,
   Library,
 } from 'lucide-react';
+import { FitnessPageSkeleton } from '../components/fitness/skeletons/FitnessPageSkeleton';
 import type { WorkoutStats } from '../lib/types/fitness';
 
 export default function FitnessDashboard() {
@@ -36,14 +37,7 @@ export default function FitnessDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Activity className="w-12 h-12 animate-spin mx-auto mb-4 text-blue-500" />
-          <p className="text-gray-600">Loading fitness stats...</p>
-        </div>
-      </div>
-    );
+    return <FitnessPageSkeleton />;
   }
 
   return (
