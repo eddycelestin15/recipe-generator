@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Crown,
@@ -18,7 +18,7 @@ import { SubscriptionRepository } from '@/app/lib/repositories/subscription-repo
 import { SubscriptionService } from '@/app/lib/services/subscription-service';
 import type { Subscription } from '@/app/lib/types/subscription';
 
-export default function SubscriptionPage() {
+function SubscriptionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
@@ -320,5 +320,17 @@ export default function SubscriptionPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SubscriptionPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
+    }>
+      <SubscriptionContent />
+    </Suspense>
   );
 }

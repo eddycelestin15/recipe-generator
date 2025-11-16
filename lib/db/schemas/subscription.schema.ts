@@ -21,17 +21,14 @@ const SubscriptionSchema = new Schema<ISubscription>(
     userId: {
       type: String,
       required: true,
-      index: true,
     },
     stripeCustomerId: {
       type: String,
       default: null,
-      index: true,
     },
     stripeSubscriptionId: {
       type: String,
       default: null,
-      index: true,
     },
     status: {
       type: String,
