@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@google/genai": "^1.28.0",
     "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -23,6 +26,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@stripe/stripe-js": "^8.4.0",
     "@types/bcryptjs": "^2.4.6",
+    "@use-gesture/react": "^10.3.1",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -37,11 +41,13 @@
     "react": "19.2.0",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "19.2.0",
+    "react-webcam": "^7.2.0",
     "recharts": "^3.4.1",
     "resend": "^6.4.2",
     "sonner": "^2.0.7",
     "stripe": "^19.3.1",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.17",
