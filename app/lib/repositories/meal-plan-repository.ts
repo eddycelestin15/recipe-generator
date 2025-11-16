@@ -15,7 +15,7 @@ import type {
   DailyMealSummary,
 } from '../types/meal-plan';
 import { getWeekStart, getWeekEnd, generateWeekDays } from '../types/meal-plan';
-import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
+import { isBrowser, getItem, setItem, removeItem, getCurrentUserId } from '../utils/storage';
 
 /**
  * Generate a unique ID for meal plans
