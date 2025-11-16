@@ -109,7 +109,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (existingUser && !existingUser.provider) {
           // Update existing credentials user to OAuth
           existingUser.provider = "google"
-          existingUser.image = user.image
+          existingUser.image = user.image || undefined
           await existingUser.save()
         }
       }
