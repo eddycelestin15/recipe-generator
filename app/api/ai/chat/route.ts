@@ -11,7 +11,7 @@ import { RateLimitService } from '@/app/lib/services/rate-limit-service';
 import { UserProfileRepository } from '@/app/lib/repositories/user-profile-repository';
 import { NutritionGoalsRepository } from '@/app/lib/repositories/nutrition-goals-repository';
 import { DailyNutritionRepository } from '@/app/lib/repositories/daily-nutrition-repository';
-import { WeightLogRepository } from '@/app/lib/repositories/weight-log-repository';
+import { HealthGoalRepository } from '@/app/lib/repositories/health-goal-repository';
 import { WorkoutLogRepository } from '@/app/lib/repositories/workout-log-repository';
 import type { ChatContext } from '@/app/lib/types/ai';
 
@@ -78,10 +78,12 @@ export async function POST(request: Request) {
       context.todayProtein = dailyNutrition.totalProtein;
     }
 
-    // Get weight goal
-    const latestWeight = WeightLogRepository.getLatest();
-    if (latestWeight && latestWeight.goalWeight) {
-      context.goalWeight = latestWeight.goalWeight;
+    // Get weight goal from health goals
+    const weightGoals = HealthGoalRepository.getAll().filter(
+      g => g.category === 'weight' && g.status === 'active'
+    );
+    if (weightGoals.length > 0) {
+      context.goalWeight = weightGoals[0].targetValue;
     }
 
     // Get weekly workouts
