@@ -5,6 +5,9 @@ import { RecipeRepository } from '../lib/repositories/recipe-repository';
 import { Recipe, RecipeSearchFilters, RecipeSortOptions, RecipeStats } from '../lib/types/recipe';
 import RecipeCard from '../components/recipes/RecipeCard';
 import RecipeFilters from '../components/recipes/RecipeFilters';
+import StoriesCarousel from '../components/stories/StoriesCarousel';
+import PullToRefreshWrapper from '../components/stories/PullToRefreshWrapper';
+import { useStories } from '../hooks/useStories';
 import { Plus, Grid, List } from 'lucide-react';
 import Link from 'next/link';
 
@@ -30,6 +33,7 @@ export default function RecipesPage() {
     recipesByDifficulty: {} as Record<string, number>,
     recipesByCuisine: {}
   });
+  const { stories, markAsViewed, addStory, refreshStories } = useStories();
 
   useEffect(() => {
     loadRecipes();
@@ -66,11 +70,36 @@ export default function RecipesPage() {
     loadRecipes();
   };
 
+  const handleAddStory = () => {
+    alert('Fonctionnalité de création de story à venir !');
+  };
+
+  const handleViewStory = (story: any) => {
+    markAsViewed(story.id);
+    alert(`Affichage de la story de ${story.userName}`);
+  };
+
+  const handleRefresh = async () => {
+    loadRecipes();
+    await refreshStories();
+  };
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
+    <PullToRefreshWrapper onRefresh={handleRefresh}>
+      <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+        {/* Stories Carousel */}
+        <div className="bg-white">
+          <StoriesCarousel
+            stories={stories}
+            onAddStory={handleAddStory}
+            onViewStory={handleViewStory}
+          />
+        </div>
+
+        <div className="p-4 md:p-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
@@ -226,7 +255,9 @@ export default function RecipesPage() {
             ))}
           </div>
         )}
-      </div>
-    </main>
+          </div>
+        </div>
+      </main>
+    </PullToRefreshWrapper>
   );
 }

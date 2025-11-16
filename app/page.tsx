@@ -15,6 +15,9 @@ import {
 } from './lib/types/recipe';
 import { Refrigerator, Sparkles, Plus, X, Filter, Save } from 'lucide-react';
 import SaveRecipeModal from './components/recipes/SaveRecipeModal';
+import StoriesCarousel from './components/stories/StoriesCarousel';
+import PullToRefreshWrapper from './components/stories/PullToRefreshWrapper';
+import { useStories } from './hooks/useStories';
 
 // Force dynamic rendering - this page uses localStorage
 export const dynamic = 'force-dynamic';
@@ -33,6 +36,9 @@ export default function Home() {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<RecipeFilters>({});
   const [zeroWasteMode, setZeroWasteMode] = useState(false);
+
+  // Stories
+  const { stories, markAsViewed, addStory, refreshStories } = useStories();
 
   // Load fridge items on mount
   useEffect(() => {
@@ -127,18 +133,41 @@ export default function Home() {
     return daysUntilExpiration >= 0 && daysUntilExpiration <= 3;
   });
 
+  const handleAddStory = () => {
+    alert('Fonctionnalité de création de story à venir !');
+  };
+
+  const handleViewStory = (story: any) => {
+    markAsViewed(story.id);
+    alert(`Affichage de la story de ${story.userName}`);
+  };
+
+  const handleRefresh = async () => {
+    loadFridgeItems();
+    await refreshStories();
+  };
+
   return (
-    <main className="bg-background min-h-full p-4 md:p-6">
-      <div className="max-w-lg mx-auto">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Générateur de Recettes IA
-          </h1>
-          <p className="text-foreground-secondary text-base">
-            Créez des recettes délicieuses avec vos ingrédients !
-          </p>
-        </div>
+    <PullToRefreshWrapper onRefresh={handleRefresh}>
+      <main className="bg-background min-h-full">
+        {/* Stories Carousel */}
+        <StoriesCarousel
+          stories={stories}
+          onAddStory={handleAddStory}
+          onViewStory={handleViewStory}
+        />
+
+        <div className="p-4 md:p-6">
+          <div className="max-w-lg mx-auto">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                Générateur de Recettes IA
+              </h1>
+              <p className="text-foreground-secondary text-base">
+                Créez des recettes délicieuses avec vos ingrédients !
+              </p>
+            </div>
 
         <div className="space-y-4">
           {/* Fridge Items */}
@@ -522,16 +551,18 @@ export default function Home() {
             )}
           </div>
         </div>
-      </div>
 
-      {/* Save Recipe Modal */}
-      {showSaveModal && recipe && (
-        <SaveRecipeModal
-          recipe={recipe}
-          fridgeItemIds={selectedFridgeItems}
-          onClose={() => setShowSaveModal(false)}
-        />
-      )}
-    </main>
+        {/* Save Recipe Modal */}
+        {showSaveModal && recipe && (
+          <SaveRecipeModal
+            recipe={recipe}
+            fridgeItemIds={selectedFridgeItems}
+            onClose={() => setShowSaveModal(false)}
+          />
+        )}
+          </div>
+        </div>
+      </main>
+    </PullToRefreshWrapper>
   );
 }

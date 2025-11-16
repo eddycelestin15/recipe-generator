@@ -239,3 +239,13 @@ html {
     -webkit-tap-highlight-color: transparent;
   }
 }
+
+/* Hide scrollbar for stories carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
