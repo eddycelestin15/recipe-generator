@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import WeeklyCalendar from '../components/meal-planning/WeeklyCalendar';
@@ -19,6 +20,9 @@ import { getWeekStart } from '@/app/lib/types/meal-plan';
 import { MealPlanRepository } from '@/app/lib/repositories/meal-plan-repository';
 import { ShoppingListRepository } from '@/app/lib/repositories/shopping-list-repository';
 import { RecipeRepository } from '@/app/lib/repositories/recipe-repository';
+
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
 
 export default function MealPlanningPage() {
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));
