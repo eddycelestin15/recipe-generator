@@ -5,6 +5,7 @@
  * Provides CRUD operations and advanced querying capabilities
  */
 
+import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
 import type {
   Recipe,
   CreateRecipeDTO,
@@ -25,30 +26,20 @@ const STORAGE_KEY_PREFIX = 'recipes_';
 
 export class RecipeRepository {
   /**
-   * Get the current user ID from localStorage
-   * For now, uses a default user ID (placeholder for future auth)
-   */
-  private static getUserId(): string {
-    let userId = localStorage.getItem('current_user_id');
-    if (!userId) {
-      userId = 'default_user';
-      localStorage.setItem('current_user_id', userId);
-    }
-    return userId;
-  }
-
-  /**
    * Get storage key for current user
    */
   private static getStorageKey(): string {
-    return `${STORAGE_KEY_PREFIX}${this.getUserId()}`;
+    return `${STORAGE_KEY_PREFIX}${getCurrentUserId()}`;
   }
 
   /**
    * Get all recipes from localStorage
    */
   private static getAllRecipesFromStorage(): Recipe[] {
-    const data = localStorage.getItem(this.getStorageKey());
+    if (!isBrowser()) {
+      return [];
+    }
+    const data = getItem(this.getStorageKey());
     if (!data) return [];
 
     try {
@@ -70,7 +61,10 @@ export class RecipeRepository {
    * Save all recipes to localStorage
    */
   private static saveAllRecipesToStorage(recipes: Recipe[]): void {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(recipes));
+    if (!isBrowser()) {
+      return;
+    }
+    setItem(this.getStorageKey(), JSON.stringify(recipes));
   }
 
   /**

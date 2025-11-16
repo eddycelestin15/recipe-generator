@@ -5,6 +5,7 @@
  */
 
 import type {
+import { isBrowser, getItem, setItem, getCurrentUserId } from '../utils/storage';
   UsageLimits,
   UsageIncrementDTO,
   PlanType,
@@ -17,10 +18,10 @@ export class UsageLimitsRepository {
    * Get the current user ID from localStorage
    */
   private static getUserId(): string {
-    let userId = localStorage.getItem('current_user_id');
+    let userId = getItem('current_user_id');
     if (!userId) {
       userId = 'default_user';
-      localStorage.setItem('current_user_id', userId);
+      setItem('current_user_id', userId);
     }
     return userId;
   }
@@ -36,7 +37,7 @@ export class UsageLimitsRepository {
    * Get usage limits from localStorage
    */
   private static getUsageLimitsFromStorage(): UsageLimits | null {
-    const data = localStorage.getItem(this.getStorageKey());
+    const data = getItem(this.getStorageKey());
     if (!data) return null;
 
     try {
@@ -56,7 +57,7 @@ export class UsageLimitsRepository {
    * Save usage limits to localStorage
    */
   private static saveUsageLimitsToStorage(limits: UsageLimits): void {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(limits));
+    setItem(this.getStorageKey(), JSON.stringify(limits));
   }
 
   /**
@@ -222,7 +223,7 @@ export class UsageLimitsRepository {
     const limits = this.getUsageLimitsFromStorage();
     if (!limits) return false;
 
-    localStorage.removeItem(this.getStorageKey());
+    removeItem(this.getStorageKey());
     return true;
   }
 

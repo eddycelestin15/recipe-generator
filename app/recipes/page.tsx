@@ -21,6 +21,7 @@ export default function RecipesPage() {
   });
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [stats, setStats] = useState({ totalRecipes: 0, favoriteCount: 0, generatedCount: 0 });
 
   useEffect(() => {
     loadRecipes();
@@ -36,6 +37,9 @@ export default function RecipesPage() {
 
     const tags = RecipeRepository.getAllTags();
     setAvailableTags(tags);
+
+    const recipeStats = RecipeRepository.getStats();
+    setStats(recipeStats);
   };
 
   const applyFiltersAndSort = () => {
@@ -53,8 +57,6 @@ export default function RecipesPage() {
     RecipeRepository.delete(id);
     loadRecipes();
   };
-
-  const stats = RecipeRepository.getStats();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-4 md:p-8">
