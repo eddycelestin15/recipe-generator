@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RecipeRepository } from '@/app/lib/repositories/recipe-repository';
@@ -11,6 +12,9 @@ import {
 } from '@/app/lib/types/recipe';
 import { Plus, X, Save, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
 
 export default function NewRecipePage() {
   const router = useRouter();

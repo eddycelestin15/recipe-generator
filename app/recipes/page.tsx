@@ -8,6 +8,9 @@ import RecipeFilters from '../components/recipes/RecipeFilters';
 import { Plus, Grid, List } from 'lucide-react';
 import Link from 'next/link';
 
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
+
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);

@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuickAddFood } from '@/app/components/nutrition/QuickAddFood';
@@ -9,6 +10,9 @@ import { format } from 'date-fns';
 import type { MealType } from '@/app/lib/types/nutrition';
 import { MEAL_TYPE_LABELS } from '@/app/lib/types/nutrition';
 import { RecipeRepository } from '@/app/lib/repositories/recipe-repository';
+
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
 
 export default function MealLogPage() {
   const router = useRouter();

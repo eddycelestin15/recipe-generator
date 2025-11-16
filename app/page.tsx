@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import { FridgeRepository } from './lib/repositories/fridge-repository';
 import { FridgeItem } from './lib/types/fridge';
@@ -14,6 +15,9 @@ import {
 } from './lib/types/recipe';
 import { Refrigerator, Sparkles, Plus, X, Filter, Save } from 'lucide-react';
 import SaveRecipeModal from './components/recipes/SaveRecipeModal';
+
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
 
 export default function Home() {
   // State

@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useEffect, useState } from 'react';
 import { NutritionCircle } from '@/app/components/nutrition/NutritionCircle';
 import { MealTimeline } from '@/app/components/nutrition/MealTimeline';
@@ -11,6 +12,9 @@ import { fr } from 'date-fns/locale';
 import Link from 'next/link';
 import type { DailyNutritionStats, MealLog } from '@/app/lib/types/nutrition';
 import { RecipeRepository } from '@/app/lib/repositories/recipe-repository';
+
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
 
 export default function NutritionDashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date());

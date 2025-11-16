@@ -1,10 +1,14 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { RecipeRepository } from '@/app/lib/repositories/recipe-repository';
 import { Recipe } from '@/app/lib/types/recipe';
 import RecipeDetail from '@/app/components/recipes/RecipeDetail';
+
+// Force dynamic rendering - this page uses localStorage
+export const dynamic = 'force-dynamic';
 
 export default function RecipeDetailPage() {
   const params = useParams();
