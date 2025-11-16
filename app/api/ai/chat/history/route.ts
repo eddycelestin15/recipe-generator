@@ -3,19 +3,26 @@
  * GET /api/ai/chat/history - Get conversation history
  */
 
-import { NextResponse } from 'next/server';
-import { ChatMessageRepository } from '@/app/lib/repositories/chat-message-repository';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '50', 10);
+    const session = await auth();
 
-    const messages = ChatMessageRepository.getRecent(limit);
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
 
+    // For now, return empty history
+    // Chat history is managed in-memory in the main chat route
+    // TODO: Implement MongoDB chat history storage for persistence
     return NextResponse.json({
-      messages,
-      count: messages.length,
+      messages: [],
+      count: 0,
     });
   } catch (error) {
     console.error('Error fetching chat history:', error);
@@ -28,8 +35,16 @@ export async function GET(request: Request) {
 
 export async function DELETE() {
   try {
-    ChatMessageRepository.clearAll();
+    const session = await auth();
 
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // TODO: Implement chat history clearing when MongoDB storage is added
     return NextResponse.json({
       success: true,
       message: 'Chat history cleared',

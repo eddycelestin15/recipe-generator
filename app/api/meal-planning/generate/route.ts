@@ -2,10 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Gemini API key is configured
+    if (!process.env.GEMINI_API_KEY) {
+      console.error('GEMINI_API_KEY is not configured in environment variables');
+      return NextResponse.json(
+        { error: 'AI service not configured. Please contact administrator.' },
+        { status: 500 }
+      );
+    }
+
     const session = await auth();
 
     if (!session || !session.user) {
@@ -115,8 +124,21 @@ Si une recette n'est pas adaptée à un type de repas, utilise null pour recipeI
     return NextResponse.json({ plan: enrichedPlan });
   } catch (error) {
     console.error('Error generating meal plan:', error);
+
+    // Log detailed error for debugging
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
+    }
+
     return NextResponse.json(
-      { error: 'Failed to generate meal plan' },
+      {
+        error: 'Failed to generate meal plan',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

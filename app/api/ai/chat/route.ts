@@ -5,19 +5,26 @@
  */
 
 import { NextResponse } from 'next/server';
-import { ChatMessageRepository } from '@/app/lib/repositories/chat-message-repository';
+import { auth } from '@/lib/auth';
 import { GeminiAIService } from '@/app/lib/services/gemini-ai-service';
-import { RateLimitService } from '@/app/lib/services/rate-limit-service';
-import { UserProfileRepository } from '@/app/lib/repositories/user-profile-repository';
-import { NutritionGoalsRepository } from '@/app/lib/repositories/nutrition-goals-repository';
-import { DailyNutritionRepository } from '@/app/lib/repositories/daily-nutrition-repository';
-import { HealthGoalRepository } from '@/app/lib/repositories/health-goal-repository';
-import { WorkoutLogRepository } from '@/app/lib/repositories/workout-log-repository';
 import type { ChatContext } from '@/app/lib/types/ai';
+import { db } from '@/lib/db/repositories';
+
+// In-memory chat storage per session (temporary until MongoDB implementation)
+const chatSessions = new Map<string, Array<{ role: string; content: string; timestamp: Date }>>();
 
 export async function GET() {
   try {
-    const messages = ChatMessageRepository.getRecent(100);
+    const session = await auth();
+
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const messages = chatSessions.get(session.user.email) || [];
     return NextResponse.json({ messages });
   } catch (error) {
     console.error('Error fetching chat history:', error);
@@ -30,6 +37,15 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const session = await auth();
+
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { message } = await request.json();
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
@@ -39,76 +55,56 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check rate limit
-    const rateLimitCheck = RateLimitService.canUseChatMessage();
-    if (!rateLimitCheck.allowed) {
+    // Get user from database
+    const user = await db.users.findByEmail(session.user.email);
+
+    if (!user) {
       return NextResponse.json(
-        {
-          error: 'Rate limit exceeded',
-          message: `Vous avez atteint votre limite de ${rateLimitCheck.limit} messages par jour. Réessayez demain ou passez à Premium.`,
-          remaining: 0,
-        },
-        { status: 429 }
+        { error: 'User not found' },
+        { status: 404 }
       );
     }
 
     // Build context from user data
     const context: ChatContext = {};
 
-    // Get user profile
-    const profile = UserProfileRepository.get();
-    if (profile) {
-      context.currentWeight = profile.weight;
-      context.dietType = profile.dietType;
-      context.goalType = profile.goalType;
+    if (user.profile) {
+      context.currentWeight = user.profile.weight;
+      context.dietType = user.preferences?.dietType;
+      context.goalType = user.goals?.goalType;
     }
 
-    // Get nutrition goals
-    const goals = NutritionGoalsRepository.get();
-    if (goals) {
-      context.goalCalories = goals.dailyCalories;
-      context.goalProtein = goals.dailyProtein;
+    if (user.goals) {
+      context.goalCalories = user.goals.dailyCalorieTarget;
+      context.goalProtein = user.goals.macroTargets?.protein;
+      context.goalWeight = user.goals.targetWeight;
     }
 
-    // Get today's nutrition
-    const today = new Date();
-    const dailyNutrition = DailyNutritionRepository.getByDate(today);
-    if (dailyNutrition) {
-      context.todayCalories = dailyNutrition.totalCalories;
-      context.todayProtein = dailyNutrition.totalProtein;
+    // Get or create chat session
+    const userEmail = session.user.email;
+    if (!chatSessions.has(userEmail)) {
+      chatSessions.set(userEmail, []);
     }
 
-    // Get weight goal from health goals
-    const weightGoals = HealthGoalRepository.getAll().filter(
-      g => g.category === 'weight' && g.status === 'active'
-    );
-    if (weightGoals.length > 0) {
-      context.goalWeight = weightGoals[0].targetValue;
-    }
+    const chatHistory = chatSessions.get(userEmail)!;
 
-    // Get weekly workouts
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    weekStart.setHours(0, 0, 0, 0);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6);
-    weekEnd.setHours(23, 59, 59, 999);
-
-    const weekWorkouts = WorkoutLogRepository.getByDateRange(weekStart, weekEnd);
-    context.weeklyWorkouts = weekWorkouts.length;
-
-    // Save user message
-    const userMessage = ChatMessageRepository.create('user', {
+    // Add user message to history
+    const userMessage = {
+      id: `msg_${Date.now()}_user`,
+      role: 'user' as const,
       content: message.trim(),
-      context,
-    });
+      timestamp: new Date(),
+    };
 
-    // Get conversation history for context
-    const history = ChatMessageRepository.getHistory(8);
-    const conversationHistory = history.map(msg => ({
-      role: msg.role,
-      content: msg.content,
-    }));
+    chatHistory.push(userMessage);
+
+    // Get recent conversation history for context (last 8 messages)
+    const conversationHistory = chatHistory
+      .slice(-8)
+      .map(msg => ({
+        role: msg.role,
+        content: msg.content,
+      }));
 
     // Generate AI response
     const aiResponse = await GeminiAIService.generateChatResponse(
@@ -117,23 +113,43 @@ export async function POST(request: Request) {
       conversationHistory
     );
 
-    // Save AI message
-    const assistantMessage = ChatMessageRepository.create('assistant', {
+    // Add AI message to history
+    const assistantMessage = {
+      id: `msg_${Date.now()}_assistant`,
+      role: 'assistant' as const,
       content: aiResponse,
-    });
+      timestamp: new Date(),
+    };
 
-    // Record usage
-    RateLimitService.recordChatMessage();
+    chatHistory.push(assistantMessage);
+
+    // Keep only last 50 messages per session
+    if (chatHistory.length > 50) {
+      chatHistory.splice(0, chatHistory.length - 50);
+    }
 
     return NextResponse.json({
       userMessage,
       assistantMessage,
-      remaining: rateLimitCheck.remaining - 1,
+      remaining: 50, // Default limit for now
     });
   } catch (error) {
     console.error('Error processing chat message:', error);
+
+    // Log detailed error for debugging
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
+    }
+
     return NextResponse.json(
-      { error: 'Failed to process message' },
+      {
+        error: 'Failed to process message',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
