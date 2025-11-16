@@ -45,21 +45,14 @@ export default function PricingPage() {
         throw new Error('Failed to create checkout session');
       }
 
-      const { sessionId } = await response.json();
+      const { url } = await response.json();
 
-      // Redirect to Stripe Checkout
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
+      // Redirect to Stripe Checkout using the URL
+      if (!url) {
+        throw new Error('No checkout URL returned');
       }
 
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId,
-      });
-
-      if (stripeError) {
-        throw stripeError;
-      }
+      window.location.href = url;
     } catch (err: any) {
       console.error('Error:', err);
       setError(err.message || 'Something went wrong. Please try again.');

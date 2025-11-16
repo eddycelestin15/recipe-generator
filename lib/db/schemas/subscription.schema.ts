@@ -68,7 +68,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -76,7 +76,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
       },
     },
     toObject: {
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

@@ -126,8 +126,8 @@ export class HealthAnalyticsService {
         ? {
             id: todayWorkout.id,
             name: todayWorkout.routineName || 'Workout',
-            completed: todayWorkout.completedAt !== undefined,
-            duration: todayWorkout.duration,
+            completed: true, // If it exists in the log, it's completed
+            duration: todayWorkout.totalDuration,
           }
         : undefined,
       currentWeight: latestWeight?.weight,
@@ -283,7 +283,7 @@ export class HealthAnalyticsService {
 
       weeklyData.set(weekStart, {
         count: existing.count + 1,
-        totalDuration: existing.totalDuration + (workout.duration || 0),
+        totalDuration: existing.totalDuration + (workout.totalDuration || 0),
       });
     });
 

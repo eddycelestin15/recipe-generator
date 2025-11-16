@@ -44,7 +44,7 @@ const FridgeItemSchema = new Schema<FridgeItem>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -53,7 +53,7 @@ const FridgeItemSchema = new Schema<FridgeItem>(
     },
     toObject: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

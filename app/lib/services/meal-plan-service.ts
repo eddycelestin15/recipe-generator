@@ -185,12 +185,14 @@ export class MealPlanService {
     if (criteria.useFridgeItems && fridgeItems.length > 0) {
       prompt += `AVAILABLE FRIDGE ITEMS (prioritize using these):\n`;
       fridgeItems.forEach(item => {
-        const daysUntilExpiry = Math.ceil(
-          (new Date(item.expirationDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-        );
         prompt += `- ${item.name} (${item.quantity} ${item.unit})`;
-        if (daysUntilExpiry <= 3) {
-          prompt += ` [EXPIRING SOON: ${daysUntilExpiry} days]`;
+        if (item.expirationDate) {
+          const daysUntilExpiry = Math.ceil(
+            (new Date(item.expirationDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          );
+          if (daysUntilExpiry <= 3) {
+            prompt += ` [EXPIRING SOON: ${daysUntilExpiry} days]`;
+          }
         }
         prompt += '\n';
       });

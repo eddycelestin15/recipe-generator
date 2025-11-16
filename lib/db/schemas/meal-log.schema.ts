@@ -49,7 +49,7 @@ const MealLogSchema = new Schema<MealLog>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -58,7 +58,7 @@ const MealLogSchema = new Schema<MealLog>(
     },
     toObject: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
