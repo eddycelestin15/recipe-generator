@@ -62,14 +62,12 @@ export default auth((req) => {
       pathname.startsWith("/auth/forgot-password") ||
       pathname.startsWith("/auth/reset-password"))
   ) {
-    return NextResponse.redirect(new URL("/", req.url))
+    return NextResponse.redirect(new URL("/", req.nextUrl.origin))
   }
 
-  // Redirect unauthenticated users to signin
+  // Redirect unauthenticated users to signin (without callbackUrl for cleaner URLs)
   if (!isAuthenticated && (isProtectedRoute || isProtectedApiRoute)) {
-    const signInUrl = new URL("/auth/signin", req.url)
-    signInUrl.searchParams.set("callbackUrl", pathname)
-    return NextResponse.redirect(signInUrl)
+    return NextResponse.redirect(new URL("/auth/signin", req.nextUrl.origin))
   }
 
   // Check if user has completed onboarding (except for onboarding page itself)
@@ -80,7 +78,7 @@ export default auth((req) => {
     !isPublicRoute &&
     !pathname.startsWith("/api")
   ) {
-    return NextResponse.redirect(new URL("/auth/onboarding", req.url))
+    return NextResponse.redirect(new URL("/auth/onboarding", req.nextUrl.origin))
   }
 
   return NextResponse.next()
