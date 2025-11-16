@@ -9,7 +9,19 @@ interface PricingCardProps {
   onSelect?: () => void;
 }
 
-const planDetails = {
+interface PlanDetail {
+  name: string;
+  price: string;
+  interval: string;
+  description: string;
+  features: string[];
+  limitations: boolean;
+  popular?: boolean;
+  bestValue?: boolean;
+  badge?: string;
+}
+
+const planDetails: Record<'free' | 'monthly' | 'yearly', PlanDetail> = {
   free: {
     name: 'Free',
     price: '€0',

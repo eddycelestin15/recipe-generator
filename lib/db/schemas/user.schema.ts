@@ -141,7 +141,7 @@ const UserSchema = new Schema<User>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -150,7 +150,7 @@ const UserSchema = new Schema<User>(
     },
     toObject: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

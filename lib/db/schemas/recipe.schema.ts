@@ -84,7 +84,7 @@ const RecipeSchema = new Schema<Recipe>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -93,7 +93,7 @@ const RecipeSchema = new Schema<Recipe>(
     },
     toObject: {
       virtuals: true,
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;

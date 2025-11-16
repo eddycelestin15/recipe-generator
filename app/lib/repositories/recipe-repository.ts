@@ -139,11 +139,11 @@ export class RecipeRepository {
 
     if (index === -1) return null;
 
-    const updatedRecipe: Recipe = {
+    const updatedRecipe = {
       ...recipes[index],
       ...data,
       lastModifiedDate: new Date(),
-    };
+    } as Recipe;
 
     recipes[index] = updatedRecipe;
     this.saveAllRecipesToStorage(recipes);
@@ -211,7 +211,7 @@ export class RecipeRepository {
 
     // Filter by meal type
     if (filters.mealType) {
-      recipes = recipes.filter(recipe => recipe.mealType.includes(filters.mealType));
+      recipes = recipes.filter(recipe => recipe.mealType.includes(filters.mealType!));
     }
 
     // Filter by tags

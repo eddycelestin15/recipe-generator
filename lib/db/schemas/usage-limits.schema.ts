@@ -79,7 +79,7 @@ const UsageLimitsSchema = new Schema<IUsageLimits>(
   {
     timestamps: { createdAt: false, updatedAt: true },
     toJSON: {
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
@@ -87,7 +87,7 @@ const UsageLimitsSchema = new Schema<IUsageLimits>(
       },
     },
     toObject: {
-      transform: function (_doc, ret) {
+      transform: function (_doc, ret: any) {
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
