@@ -11,10 +11,11 @@ import type { UpdateMealLogDTO } from '@/app/lib/types/nutrition';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const meal = MealLogRepository.getById(params.id);
+    const { id } = await params;
+    const meal = MealLogRepository.getById(id);
 
     if (!meal) {
       return NextResponse.json(
@@ -35,12 +36,13 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const data: UpdateMealLogDTO = await request.json();
 
-    const updatedMeal = MealLogRepository.update(params.id, data);
+    const updatedMeal = MealLogRepository.update(id, data);
 
     if (!updatedMeal) {
       return NextResponse.json(
@@ -61,10 +63,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const success = MealLogRepository.delete(params.id);
+    const { id } = await params;
+    const success = MealLogRepository.delete(id);
 
     if (!success) {
       return NextResponse.json(

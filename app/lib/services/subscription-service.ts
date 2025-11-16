@@ -6,11 +6,11 @@
 
 import { SubscriptionRepository } from '../repositories/subscription-repository';
 import { UsageLimitsRepository } from '../repositories/usage-limits-repository';
+import { PLAN_LIMITS } from '../types/subscription';
 import type {
   FeatureAccessResult,
   PremiumFeature,
   PREMIUM_FEATURES,
-  PLAN_LIMITS,
   PlanType,
 } from '../types/subscription';
 
