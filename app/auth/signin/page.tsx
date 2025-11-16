@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
@@ -11,8 +11,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 function SignInContent() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -34,7 +32,7 @@ function SignInContent() {
       if (result?.error) {
         setError("Invalid email or password")
       } else {
-        router.push(callbackUrl)
+        router.push("/")
         router.refresh()
       }
     } catch (error) {
