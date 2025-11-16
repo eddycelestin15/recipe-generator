@@ -26,8 +26,6 @@ const UsageLimitsSchema = new Schema<IUsageLimits>(
     userId: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
     },
     plan: {
       type: String,

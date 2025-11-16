@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, X, ArrowLeft, Zap } from 'lucide-react';
 import PricingCard from '@/app/components/premium/PricingCard';
@@ -10,7 +10,7 @@ import { loadStripe } from '@stripe/stripe-js';
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
-export default function PricingPage() {
+function PricingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentPlan, setCurrentPlan] = useState<'free' | 'premium'>('free');
@@ -259,5 +259,17 @@ export default function PricingPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
+    }>
+      <PricingContent />
+    </Suspense>
   );
 }
