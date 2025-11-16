@@ -14,7 +14,7 @@ import type {
   MealInsight,
 } from '../types/ai';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export class GeminiAIService {
   /**
@@ -26,6 +26,10 @@ export class GeminiAIService {
     conversationHistory: Array<{ role: string; content: string }> = []
   ): Promise<string> {
     try {
+      if (!process.env.GEMINI_API_KEY) {
+        throw new Error('GEMINI_API_KEY is not configured');
+      }
+
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
       const contextPrompt = `Tu es un nutritionniste expert IA. Voici le profil de l'utilisateur:
@@ -56,6 +60,21 @@ Si l'utilisateur rencontre des difficultés, sois empathique et constructif.`;
       return response.text().trim();
     } catch (error) {
       console.error('Error generating chat response:', error);
+
+      // Log detailed error for debugging
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+        });
+      }
+
+      // Check if it's an API key error
+      if (error instanceof Error && error.message.includes('API key')) {
+        throw new Error('Service de chat IA non configuré. Veuillez contacter l\'administrateur.');
+      }
+
       return "Désolé, je rencontre un problème technique. Pouvez-vous reformuler votre question ?";
     }
   }
