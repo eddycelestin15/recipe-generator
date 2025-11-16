@@ -4,6 +4,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 import MobileHeader from "./components/MobileHeader";
 import BottomNavigation from "./components/BottomNavigation";
+import { Sidebar } from "./components/Sidebar";
+import { RightSidebar } from "./components/RightSidebar";
 import FitnessInitializer from "./components/FitnessInitializer";
 import HabitsInitializer from "./components/HabitsInitializer";
 import AIInsightsInitializer from "./components/AIInsightsInitializer";
@@ -45,11 +47,29 @@ export default function RootLayout({
           <FitnessInitializer />
           <HabitsInitializer />
           <AIInsightsInitializer />
-          <MobileHeader />
-          <div className="content-with-nav">
-            {children}
+
+          {/* Mobile Header - Hidden on desktop */}
+          <div className="lg:hidden">
+            <MobileHeader />
           </div>
-          <BottomNavigation />
+
+          {/* Desktop Layout with Sidebars */}
+          <Sidebar />
+          <RightSidebar />
+
+          {/* Main Content Area */}
+          <div className="content-with-nav lg:content-with-sidebar">
+            <div className="lg:ml-[280px] xl:mr-[320px]">
+              <div className="mx-auto max-w-[600px] lg:border-x lg:border-border lg:min-h-screen">
+                {children}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Navigation - Hidden on desktop */}
+          <div className="lg:hidden">
+            <BottomNavigation />
+          </div>
         </Providers>
       </body>
     </html>
