@@ -3,32 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import {
-  X,
   Calendar,
   ShoppingCart,
   Sparkles,
   Loader2,
-  Plus,
   Trash2,
-  Eye
+  Save,
+  Copy
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/components/ui/dialog';
 import { Button } from '@/app/components/ui/button';
+import { Card } from '@/app/components/ui/card';
 import { toast } from 'sonner';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortableStrategy,
-} from '@dnd-kit/sortable';
 
 interface Recipe {
   id: string;
@@ -61,11 +46,6 @@ interface WeekPlan {
   sunday: DayPlan;
 }
 
-interface WeeklyMealPlanningModalProps {
-  open: boolean;
-  onClose: () => void;
-}
-
 const emptySlot: MealSlot = { recipeId: null };
 const emptyDay: DayPlan = {
   breakfast: emptySlot,
@@ -74,10 +54,7 @@ const emptyDay: DayPlan = {
   snack: emptySlot,
 };
 
-export default function WeeklyMealPlanningModal({
-  open,
-  onClose,
-}: WeeklyMealPlanningModalProps) {
+export default function WeeklyPlanningPage() {
   const t = useTranslations('mealPlanning');
   const [weekPlan, setWeekPlan] = useState<WeekPlan>({
     monday: emptyDay,
@@ -95,13 +72,6 @@ export default function WeeklyMealPlanningModal({
   const [shoppingList, setShoppingList] = useState<string[]>([]);
   const [showShoppingList, setShowShoppingList] = useState(false);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
   const days = [
     'monday',
     'tuesday',
@@ -115,11 +85,9 @@ export default function WeeklyMealPlanningModal({
   const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
 
   useEffect(() => {
-    if (open) {
-      loadRecipes();
-      loadWeekPlan();
-    }
-  }, [open]);
+    loadRecipes();
+    loadWeekPlan();
+  }, []);
 
   const loadRecipes = async () => {
     setIsLoadingRecipes(true);
@@ -279,60 +247,64 @@ export default function WeeklyMealPlanningModal({
 
   if (showShoppingList) {
     return (
-      <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5" />
-              {t('shoppingList')}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-            {shoppingList.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-3 p-3 bg-muted rounded-lg"
-              >
-                <input type="checkbox" className="w-4 h-4" />
-                <span className="text-sm">{item}</span>
+      <div className="min-h-screen bg-background pt-16 pb-20 md:pb-8">
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <ShoppingCart className="w-6 h-6 text-primary" />
+                <h1 className="text-2xl font-bold">{t('shoppingList')}</h1>
               </div>
-            ))}
-          </div>
+              <Button
+                variant="outline"
+                onClick={() => setShowShoppingList(false)}
+              >
+                {t('back')}
+              </Button>
+            </div>
 
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setShowShoppingList(false)} className="flex-1">
-              {t('back')}
-            </Button>
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto mb-6">
+              {shoppingList.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+                >
+                  <input type="checkbox" className="w-5 h-5" />
+                  <span className="text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+
             <Button
               onClick={() => {
                 navigator.clipboard.writeText(shoppingList.join('\n'));
-                toast.success('Copied to clipboard!');
+                toast.success('Shopping list copied to clipboard!');
               }}
-              className="flex-1"
+              className="w-full gap-2"
             >
+              <Copy className="w-4 h-4" />
               Copy List
             </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl h-[90vh] flex flex-col p-0">
+    <div className="min-h-screen bg-background pt-16 pb-20 md:pb-8">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Header */}
-        <DialogHeader className="px-6 py-4 border-b border-border">
-          <div className="flex items-center justify-between">
+        <div className="mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Calendar className="w-6 h-6 text-primary" />
+              <Calendar className="w-8 h-8 text-primary" />
               <div>
-                <DialogTitle className="text-xl font-bold">{t('title')}</DialogTitle>
+                <h1 className="text-2xl md:text-3xl font-bold">{t('title')}</h1>
                 <p className="text-sm text-muted-foreground">{t('weeklyPlan')}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="outline"
                 onClick={handleGenerateAIPlan}
@@ -360,55 +332,59 @@ export default function WeeklyMealPlanningModal({
                 {t('generateShoppingList')}
               </Button>
               <Button onClick={handleSavePlan} className="gap-2">
+                <Save className="w-4 h-4" />
                 {t('save')}
               </Button>
             </div>
           </div>
-        </DialogHeader>
+        </div>
 
         {/* Weekly Nutrition Summary */}
-        <div className="px-6 py-3 bg-muted/50 border-b border-border">
-          <div className="grid grid-cols-4 gap-4 text-center">
-            <div>
-              <p className="text-xs text-muted-foreground">{t('totalCalories')}</p>
-              <p className="text-lg font-bold">{weeklyNutrition.totalCalories}</p>
-              <p className="text-xs text-muted-foreground">
+        <Card className="p-4 mb-6 bg-gradient-to-r from-primary/5 to-secondary/5">
+          <h3 className="font-semibold mb-3">{t('weeklyNutrition')}</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground mb-1">{t('totalCalories')}</p>
+              <p className="text-2xl font-bold text-primary">{weeklyNutrition.totalCalories}</p>
+              <p className="text-xs text-muted-foreground mt-1">
                 {t('avgPerDay')}: {weeklyNutrition.avgCaloriesPerDay}
               </p>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Protein</p>
-              <p className="text-lg font-bold">{weeklyNutrition.totalProtein}g</p>
-              <p className="text-xs text-muted-foreground">
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground mb-1">Protein</p>
+              <p className="text-2xl font-bold text-emerald-600">{weeklyNutrition.totalProtein}g</p>
+              <p className="text-xs text-muted-foreground mt-1">
                 {t('avgPerDay')}: {weeklyNutrition.avgProteinPerDay}g
               </p>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Carbs</p>
-              <p className="text-lg font-bold">{weeklyNutrition.totalCarbs}g</p>
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground mb-1">Carbs</p>
+              <p className="text-2xl font-bold text-blue-600">{weeklyNutrition.totalCarbs}g</p>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Fat</p>
-              <p className="text-lg font-bold">{weeklyNutrition.totalFat}g</p>
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground mb-1">Fat</p>
+              <p className="text-2xl font-bold text-orange-600">{weeklyNutrition.totalFat}g</p>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Calendar Grid */}
-        <div className="flex-1 overflow-auto px-6 py-4">
-          <div className="grid grid-cols-7 gap-3 min-w-max">
+        <div className="overflow-x-auto">
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-4 min-w-max md:min-w-0">
             {days.map((day) => (
-              <div key={day} className="min-w-[180px]">
-                <h3 className="font-semibold mb-2 capitalize">{t(day)}</h3>
-                <div className="space-y-2">
+              <Card key={day} className="p-4">
+                <h3 className="font-bold text-lg mb-3 capitalize text-center border-b pb-2">
+                  {t(day)}
+                </h3>
+                <div className="space-y-3">
                   {mealTypes.map((mealType) => {
                     const slot = weekPlan[day][mealType];
                     return (
                       <div
                         key={mealType}
-                        className="p-3 border-2 border-dashed border-border rounded-lg bg-card hover:border-primary transition-colors"
+                        className="p-3 border-2 border-dashed border-border rounded-lg bg-muted/30 hover:border-primary/50 transition-all duration-200"
                       >
-                        <p className="text-xs font-medium text-muted-foreground mb-2 capitalize">
+                        <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                           {t(mealType)}
                         </p>
                         {slot.recipe ? (
@@ -417,29 +393,28 @@ export default function WeeklyMealPlanningModal({
                               {slot.recipe.name}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {slot.recipe.calories} cal
+                              {slot.recipe.calories} cal • {slot.recipe.protein}g protein
                             </p>
-                            <div className="flex gap-1">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => removeRecipeFromSlot(day, mealType)}
-                                className="h-6 w-6 p-0"
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => removeRecipeFromSlot(day, mealType)}
+                              className="h-7 w-full text-xs gap-1 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              Remove
+                            </Button>
                           </div>
                         ) : (
                           <div className="space-y-2">
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground mb-2">
                               {t('dragRecipeHere')}
                             </p>
                             <select
                               onChange={(e) =>
                                 e.target.value && addRecipeToSlot(day, mealType, e.target.value)
                               }
-                              className="w-full text-xs p-1 border rounded"
+                              className="w-full text-xs p-2 border rounded bg-background"
                               value=""
                             >
                               <option value="">Select recipe...</option>
@@ -455,11 +430,11 @@ export default function WeeklyMealPlanningModal({
                     );
                   })}
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }

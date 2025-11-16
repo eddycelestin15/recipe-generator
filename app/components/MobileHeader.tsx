@@ -6,14 +6,10 @@ import { ChefHat, Bell, Menu, Crown, CreditCard, Settings, Calendar, MessageCirc
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
-import AINutritionistModal from '@/app/components/modals/AINutritionistModal';
-import WeeklyMealPlanningModal from '@/app/components/modals/WeeklyMealPlanningModal';
 
 export default function MobileHeader() {
   const [showMenu, setShowMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showNutritionist, setShowNutritionist] = useState(false);
-  const [showMealPlanning, setShowMealPlanning] = useState(false);
   const { isPremium, isInTrial, trialDaysRemaining } = useSubscription();
 
   return (
@@ -37,22 +33,22 @@ export default function MobileHeader() {
             )}
 
             {/* Meal Planning */}
-            <button
-              onClick={() => setShowMealPlanning(true)}
+            <Link
+              href="/weekly-planning"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
               title="Weekly Meal Planning"
             >
               <Calendar className="w-5 h-5 text-foreground-secondary" />
-            </button>
+            </Link>
 
             {/* AI Nutritionist */}
-            <button
-              onClick={() => setShowNutritionist(true)}
+            <Link
+              href="/ai-nutritionist"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
               title="AI Nutritionist"
             >
               <MessageCircle className="w-5 h-5 text-foreground-secondary" />
-            </button>
+            </Link>
 
             {/* Theme toggle */}
             <ThemeToggle />
@@ -143,10 +139,6 @@ export default function MobileHeader() {
           </div>
         </div>
       </div>
-
-      {/* Modals */}
-      <AINutritionistModal open={showNutritionist} onClose={() => setShowNutritionist(false)} />
-      <WeeklyMealPlanningModal open={showMealPlanning} onClose={() => setShowMealPlanning(false)} />
     </header>
   );
 }

@@ -7,15 +7,11 @@ import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, La
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
 import ThemeToggle from '@/app/components/ThemeToggle';
-import AINutritionistModal from '@/app/components/modals/AINutritionistModal';
-import WeeklyMealPlanningModal from '@/app/components/modals/WeeklyMealPlanningModal';
 
 export default function Navigation() {
   const [expiringCount, setExpiringCount] = useState(0);
   const [insightsCount, setInsightsCount] = useState(0);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [showNutritionist, setShowNutritionist] = useState(false);
-  const [showMealPlanning, setShowMealPlanning] = useState(false);
   const pathname = usePathname();
   const { isPremium, isInTrial, trialDaysRemaining } = useSubscription();
 
@@ -159,22 +155,22 @@ export default function Navigation() {
             })}
 
             {/* Meal Planning Icon */}
-            <button
-              onClick={() => setShowMealPlanning(true)}
+            <Link
+              href="/weekly-planning"
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-foreground-secondary hover:bg-muted hover:text-foreground transition-all duration-200"
               title="Weekly Meal Planning"
             >
               <Calendar className="w-5 h-5" />
-            </button>
+            </Link>
 
             {/* AI Nutritionist Icon */}
-            <button
-              onClick={() => setShowNutritionist(true)}
+            <Link
+              href="/ai-nutritionist"
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-foreground-secondary hover:bg-muted hover:text-foreground transition-all duration-200"
               title="AI Nutritionist"
             >
               <MessageCircle className="w-5 h-5" />
-            </button>
+            </Link>
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -220,10 +216,6 @@ export default function Navigation() {
           </div>
         </div>
       </div>
-
-      {/* Modals */}
-      <AINutritionistModal open={showNutritionist} onClose={() => setShowNutritionist(false)} />
-      <WeeklyMealPlanningModal open={showMealPlanning} onClose={() => setShowMealPlanning(false)} />
     </nav>
   );
 }
