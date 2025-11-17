@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { FridgeItem, FridgeCategory, Unit } from '@/app/lib/types/fridge';
 import { X } from 'lucide-react';
 
@@ -25,6 +26,7 @@ const CATEGORIES: FridgeCategory[] = [
 const UNITS: Unit[] = ['g', 'kg', 'ml', 'L', 'pcs', 'cup', 'tbsp'];
 
 export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: AddItemModalProps) {
+  const t = useTranslations();
   const [formData, setFormData] = useState({
     name: '',
     quantity: '',
@@ -33,6 +35,20 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
     expirationDate: '',
     notes: '',
   });
+
+  const getCategoryLabel = (category: FridgeCategory): string => {
+    const categoryMap: Record<FridgeCategory, string> = {
+      'Fruits': t('fridge.categories.fruits'),
+      'Légumes': t('fridge.categories.vegetables'),
+      'Viandes': t('fridge.categories.meats'),
+      'Poissons': t('fridge.categories.fish'),
+      'Produits laitiers': t('fridge.categories.dairy'),
+      'Céréales': t('fridge.categories.grains'),
+      'Condiments': t('fridge.categories.condiments'),
+      'Autre': t('fridge.categories.other'),
+    };
+    return categoryMap[category];
+  };
 
   useEffect(() => {
     if (editItem) {
@@ -80,12 +96,12 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-800">
-            {editItem ? 'Modifier l\'article' : 'Ajouter un article'}
+            {editItem ? t('fridge.editItem') : t('fridge.addItem')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="Fermer"
+            aria-label={t('fridge.close')}
           >
             <X className="w-6 h-6" />
           </button>
@@ -94,7 +110,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Nom de l'article *
+              {t('fridge.itemName')}
             </label>
             <input
               type="text"
@@ -102,7 +118,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Ex: Tomates"
+              placeholder={t('fridge.itemNamePlaceholder')}
               required
             />
           </div>
@@ -110,7 +126,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                Quantité *
+                {t('fridge.quantity')}
               </label>
               <input
                 type="number"
@@ -127,7 +143,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
 
             <div>
               <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-1">
-                Unité *
+                {t('fridge.unit')}
               </label>
               <select
                 id="unit"
@@ -147,7 +163,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
 
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-              Catégorie *
+              {t('fridge.category')}
             </label>
             <select
               id="category"
@@ -158,7 +174,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
             >
               {CATEGORIES.map((category) => (
                 <option key={category} value={category}>
-                  {category}
+                  {getCategoryLabel(category)}
                 </option>
               ))}
             </select>
@@ -166,7 +182,7 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
 
           <div>
             <label htmlFor="expirationDate" className="block text-sm font-medium text-gray-700 mb-1">
-              Date d'expiration
+              {t('fridge.expirationDate')}
             </label>
             <input
               type="date"
@@ -179,14 +195,14 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
 
           <div>
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-              Notes
+              {t('fridge.notes')}
             </label>
             <textarea
               id="notes"
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
-              placeholder="Remarques..."
+              placeholder={t('fridge.notesPlaceholder')}
               rows={3}
             />
           </div>
@@ -197,13 +213,13 @@ export default function AddItemModal({ isOpen, onClose, onSubmit, editItem }: Ad
               onClick={onClose}
               className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Annuler
+              {t('fridge.cancel')}
             </button>
             <button
               type="submit"
               className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium rounded-lg hover:from-orange-600 hover:to-red-600 transition-colors"
             >
-              {editItem ? 'Mettre à jour' : 'Ajouter'}
+              {editItem ? t('fridge.update') : t('fridge.add')}
             </button>
           </div>
         </form>

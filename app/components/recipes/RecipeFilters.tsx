@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { RecipeSearchFilters, CUISINE_TYPES, MealType, RecipeDifficulty } from '@/app/lib/types/recipe';
 import { Search, Filter, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface RecipeFiltersProps {
   filters: RecipeSearchFilters;
@@ -12,6 +13,7 @@ interface RecipeFiltersProps {
 
 export default function RecipeFilters({ filters, onFiltersChange, availableTags }: RecipeFiltersProps) {
   const [showFilters, setShowFilters] = useState(false);
+  const t = useTranslations();
 
   const handleQueryChange = (query: string) => {
     onFiltersChange({ ...filters, query });
@@ -69,7 +71,7 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Rechercher une recette..."
+            placeholder={t('recipes.searchPlaceholder')}
             value={filters.query || ''}
             onChange={(e) => handleQueryChange(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -84,7 +86,7 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
           }`}
         >
           <Filter className="w-5 h-5" />
-          <span className="hidden sm:inline">Filtres</span>
+          <span className="hidden sm:inline">{t('recipes.filters')}</span>
         </button>
         {hasActiveFilters && (
           <button
@@ -92,7 +94,7 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
             className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 flex items-center gap-2"
           >
             <X className="w-5 h-5" />
-            <span className="hidden sm:inline">Effacer</span>
+            <span className="hidden sm:inline">{t('common.clear')}</span>
           </button>
         )}
       </div>
@@ -103,31 +105,31 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
           {/* Difficulty */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Difficulté
+              {t('recipes.difficulty')}
             </label>
             <select
               value={filters.difficulty || ''}
               onChange={(e) => handleDifficultyChange(e.target.value as RecipeDifficulty || undefined)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
-              <option value="">Toutes</option>
-              <option value="easy">Facile</option>
-              <option value="medium">Moyen</option>
-              <option value="hard">Difficile</option>
+              <option value="">{t('recipes.allDifficulties')}</option>
+              <option value="easy">{t('recipes.difficultyEasy')}</option>
+              <option value="medium">{t('recipes.difficultyMedium')}</option>
+              <option value="hard">{t('recipes.difficultyHard')}</option>
             </select>
           </div>
 
           {/* Cuisine Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Type de cuisine
+              {t('recipes.cuisineType')}
             </label>
             <select
               value={filters.cuisineType || ''}
               onChange={(e) => handleCuisineTypeChange(e.target.value || undefined)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
-              <option value="">Toutes</option>
+              <option value="">{t('recipes.allCuisines')}</option>
               {CUISINE_TYPES.map((cuisine) => (
                 <option key={cuisine.value} value={cuisine.value}>
                   {cuisine.label}
@@ -139,44 +141,44 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
           {/* Meal Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Type de repas
+              {t('recipes.mealType')}
             </label>
             <select
               value={filters.mealType || ''}
               onChange={(e) => handleMealTypeChange(e.target.value as MealType || undefined)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
-              <option value="">Tous</option>
-              <option value="breakfast">Petit-déjeuner</option>
-              <option value="lunch">Déjeuner</option>
-              <option value="dinner">Dîner</option>
-              <option value="snack">Snack</option>
-              <option value="dessert">Dessert</option>
+              <option value="">{t('recipes.allMealTypes')}</option>
+              <option value="breakfast">{t('recipes.breakfast')}</option>
+              <option value="lunch">{t('recipes.lunch')}</option>
+              <option value="dinner">{t('recipes.dinner')}</option>
+              <option value="snack">{t('recipes.snack')}</option>
+              <option value="dessert">{t('recipes.dessert')}</option>
             </select>
           </div>
 
           {/* Max Prep Time */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Temps de préparation max
+              {t('recipes.maxPrepTime')}
             </label>
             <select
               value={filters.maxPrepTime || ''}
               onChange={(e) => handleMaxPrepTimeChange(e.target.value ? parseInt(e.target.value) : undefined)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
-              <option value="">Tous</option>
-              <option value="15">15 minutes</option>
-              <option value="30">30 minutes</option>
-              <option value="60">1 heure</option>
-              <option value="120">2 heures</option>
+              <option value="">{t('recipes.allTimes')}</option>
+              <option value="15">{t('recipes.time15min')}</option>
+              <option value="30">{t('recipes.time30min')}</option>
+              <option value="60">{t('recipes.time1hour')}</option>
+              <option value="120">{t('recipes.time2hours')}</option>
             </select>
           </div>
 
           {/* Quick Filters */}
           <div className="md:col-span-2 lg:col-span-1">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Filtres rapides
+              {t('recipes.quickFilters')}
             </label>
             <div className="flex flex-wrap gap-2">
               <button
@@ -187,7 +189,7 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                ⭐ Favoris
+                {t('recipes.favorites')}
               </button>
               <button
                 onClick={handleToggleGenerated}
@@ -197,7 +199,7 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                🤖 IA Générées
+                {t('recipes.aiGenerated')}
               </button>
             </div>
           </div>
@@ -206,7 +208,7 @@ export default function RecipeFilters({ filters, onFiltersChange, availableTags 
           {availableTags.length > 0 && (
             <div className="md:col-span-2 lg:col-span-3">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tags
+                {t('recipes.tags')}
               </label>
               <div className="flex flex-wrap gap-2">
                 {availableTags.map((tag) => (

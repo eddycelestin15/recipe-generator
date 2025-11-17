@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { FridgeItem, FridgeCategory, ViewMode, SortOption } from '@/app/lib/types/fridge';
 import { calculateFridgeStats, sortItems, filterItems } from '@/app/lib/utils/fridge-helpers';
 import FridgeItemCard from '@/app/components/fridge/FridgeItemCard';
@@ -17,6 +18,7 @@ import {
 } from 'lucide-react';
 
 export default function FridgePage() {
+  const t = useTranslations();
   const [items, setItems] = useState<FridgeItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +40,21 @@ export default function FridgePage() {
     'Condiments',
     'Autre',
   ];
+
+  const getCategoryLabel = (category: FridgeCategory | 'all'): string => {
+    if (category === 'all') return t('fridge.categories.all');
+    const categoryMap: Record<FridgeCategory, string> = {
+      'Fruits': t('fridge.categories.fruits'),
+      'Légumes': t('fridge.categories.vegetables'),
+      'Viandes': t('fridge.categories.meats'),
+      'Poissons': t('fridge.categories.fish'),
+      'Produits laitiers': t('fridge.categories.dairy'),
+      'Céréales': t('fridge.categories.grains'),
+      'Condiments': t('fridge.categories.condiments'),
+      'Autre': t('fridge.categories.other'),
+    };
+    return categoryMap[category];
+  };
 
   useEffect(() => {
     loadItems();
@@ -102,7 +119,7 @@ export default function FridgePage() {
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
+    if (!confirm(t('fridge.deleteConfirm'))) return;
 
     try {
       const response = await fetch(`/api/fridge/${id}`, {
@@ -166,7 +183,7 @@ export default function FridgePage() {
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="w-12 h-12 text-orange-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-gray-600">{t('fridge.loading')}</p>
         </div>
       </div>
     );
@@ -178,9 +195,9 @@ export default function FridgePage() {
         {/* Header */}
         <div className="mb-8">
           <div className="mb-4">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">Mon Frigo Virtuel</h1>
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">{t('fridge.virtualFridge')}</h1>
             <p className="text-gray-600">
-              Gérez vos aliments et évitez le gaspillage
+              {t('fridge.subtitle')}
             </p>
           </div>
 
@@ -198,7 +215,7 @@ export default function FridgePage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un article..."
+                placeholder={t('fridge.searchPlaceholder')}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
@@ -210,7 +227,7 @@ export default function FridgePage() {
                 className="flex items-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
               >
                 <SlidersHorizontal className="w-5 h-5" />
-                <span className="hidden md:inline">Stats</span>
+                <span className="hidden md:inline">{t('fridge.stats')}</span>
               </button>
 
               <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
@@ -219,7 +236,7 @@ export default function FridgePage() {
                   className={`p-2 rounded transition-colors ${
                     viewMode === 'list' ? 'bg-white shadow' : 'hover:bg-gray-200'
                   }`}
-                  aria-label="Vue liste"
+                  aria-label={t('fridge.viewList')}
                 >
                   <List className="w-5 h-5" />
                 </button>
@@ -228,7 +245,7 @@ export default function FridgePage() {
                   className={`p-2 rounded transition-colors ${
                     viewMode === 'grid' ? 'bg-white shadow' : 'hover:bg-gray-200'
                   }`}
-                  aria-label="Vue grille"
+                  aria-label={t('fridge.viewGrid')}
                 >
                   <Grid3x3 className="w-5 h-5" />
                 </button>
@@ -242,22 +259,22 @@ export default function FridgePage() {
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium rounded-lg hover:from-orange-600 hover:to-red-600 transition-colors shadow-lg"
               >
                 <Plus className="w-5 h-5" />
-                <span>Ajouter</span>
+                <span>{t('fridge.add')}</span>
               </button>
             </div>
           </div>
 
           {/* Tri */}
           <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Trier par:</label>
+            <label className="text-sm font-medium text-gray-700">{t('fridge.sortBy')}</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              <option value="name">Nom</option>
-              <option value="addedDate">Date d'ajout</option>
-              <option value="expirationDate">Date d'expiration</option>
+              <option value="name">{t('fridge.sortOptions.name')}</option>
+              <option value="addedDate">{t('fridge.sortOptions.addedDate')}</option>
+              <option value="expirationDate">{t('fridge.sortOptions.expirationDate')}</option>
             </select>
           </div>
         </div>
@@ -277,7 +294,7 @@ export default function FridgePage() {
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {category === 'all' ? 'Tous' : category} ({count})
+                  {getCategoryLabel(category)} ({count})
                 </button>
               );
             })}
@@ -293,12 +310,12 @@ export default function FridgePage() {
                   <Search className="w-16 h-16 mx-auto" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                  Aucun article trouvé
+                  {t('fridge.noItemsFound')}
                 </h3>
                 <p className="text-gray-500 mb-6">
                   {searchQuery || selectedCategory !== 'all'
-                    ? 'Essayez de modifier vos filtres de recherche'
-                    : 'Commencez par ajouter des articles à votre frigo'}
+                    ? t('fridge.tryModifyingFilters')
+                    : t('fridge.startAddingItems')}
                 </p>
                 {!searchQuery && selectedCategory === 'all' && (
                   <button
@@ -306,7 +323,7 @@ export default function FridgePage() {
                     className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium rounded-lg hover:from-orange-600 hover:to-red-600 transition-colors inline-flex items-center gap-2"
                   >
                     <Plus className="w-5 h-5" />
-                    Ajouter un article
+                    {t('fridge.addItem')}
                   </button>
                 )}
               </div>

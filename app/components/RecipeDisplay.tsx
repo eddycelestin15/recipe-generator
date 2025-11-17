@@ -1,3 +1,7 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+
 interface Recipe {
   title: string;
   description: string;
@@ -14,6 +18,7 @@ interface RecipeDisplayProps {
 }
 
 export default function RecipeDisplay({ recipe, imagePrompt }: RecipeDisplayProps) {
+  const t = useTranslations();
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case 'easy':
@@ -89,7 +94,7 @@ export default function RecipeDisplay({ recipe, imagePrompt }: RecipeDisplayProp
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
             />
           </svg>
-          Ingredients
+          {t('recipes.ingredients')}
         </h3>
         <ul className="space-y-2">
           {recipe.ingredients.map((ingredient, index) => (
@@ -119,7 +124,7 @@ export default function RecipeDisplay({ recipe, imagePrompt }: RecipeDisplayProp
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          Instructions
+          {t('recipes.instructions')}
         </h3>
         <ol className="space-y-4">
           {recipe.instructions.map((instruction, index) => (
@@ -152,11 +157,11 @@ export default function RecipeDisplay({ recipe, imagePrompt }: RecipeDisplayProp
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            AI-Generated Image Description
+            {t('recipes.aiImageDescription')}
           </h3>
           <p className="text-gray-700 leading-relaxed">{imagePrompt}</p>
           <p className="text-sm text-gray-500 mt-3 italic">
-            This description can be used with image generation services like DALL-E, Midjourney, or Stable Diffusion to create a visual representation of your recipe.
+            {t('recipes.aiImageDescriptionHint')}
           </p>
         </div>
       )}

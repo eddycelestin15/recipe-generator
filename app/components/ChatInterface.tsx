@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Send, Loader2, User, Bot, Sparkles } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { ChatMessage } from '../lib/types/ai';
 
 export default function ChatInterface() {
+  const t = useTranslations();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +53,7 @@ export default function ChatInterface() {
 
       if (response.status === 429) {
         // Rate limit exceeded
-        alert(data.message || 'Limite de messages atteinte');
+        alert(data.message || t('chat.limitReached'));
         setInput(userMessage); // Restore message
         return;
       }
@@ -64,7 +66,7 @@ export default function ChatInterface() {
       setRemaining(data.remaining);
     } catch (error) {
       console.error('Error sending message:', error);
-      alert('Erreur lors de l\'envoi du message');
+      alert(t('chat.sendError'));
       setInput(userMessage); // Restore message
     } finally {
       setIsLoading(false);
@@ -85,15 +87,15 @@ export default function ChatInterface() {
         <div className="flex items-center gap-3">
           <Sparkles className="w-6 h-6" />
           <div>
-            <h2 className="text-xl font-bold">Nutritionniste IA</h2>
+            <h2 className="text-xl font-bold">{t('chat.title')}</h2>
             <p className="text-sm opacity-90">
-              Posez-moi vos questions sur la nutrition et vos objectifs
+              {t('chat.description')}
             </p>
           </div>
         </div>
         {remaining !== null && (
           <div className="mt-2 text-xs opacity-75">
-            {remaining} messages restants aujourd'hui
+            {t('chat.remainingMessages', { count: remaining })}
           </div>
         )}
       </div>
@@ -103,18 +105,17 @@ export default function ChatInterface() {
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 mt-10">
             <Bot className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <p className="text-lg font-medium">Bienvenue !</p>
+            <p className="text-lg font-medium">{t('chat.welcome')}</p>
             <p className="text-sm mt-2">
-              Je suis votre nutritionniste IA personnel. <br />
-              Posez-moi des questions sur votre alimentation, vos objectifs ou demandez des conseils.
+              {t('chat.welcomeMessage')}
             </p>
             <div className="mt-6 space-y-2">
-              <p className="text-xs text-gray-400">Exemples de questions:</p>
+              <p className="text-xs text-gray-400">{t('chat.examplesLabel')}</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {[
-                  'Comment atteindre mes objectifs protéines ?',
-                  'Analyse ma progression cette semaine',
-                  'Quels aliments pour plus d\'énergie ?',
+                  t('chat.example1'),
+                  t('chat.example2'),
+                  t('chat.example3'),
                 ].map((example) => (
                   <button
                     key={example}
@@ -183,7 +184,7 @@ export default function ChatInterface() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Posez votre question..."
+            placeholder={t('chat.placeholder')}
             className="flex-1 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
             rows={1}
             disabled={isLoading}

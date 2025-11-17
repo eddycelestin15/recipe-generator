@@ -3,38 +3,40 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Home, BookOpen, Plus, Dumbbell, User } from 'lucide-react';
-
-const navItems = [
-  {
-    href: '/dashboard',
-    icon: Home,
-    label: 'Home',
-  },
-  {
-    href: '/recipes',
-    icon: BookOpen,
-    label: 'Recipes',
-  },
-  {
-    href: '/generator',
-    icon: Plus,
-    label: 'Add',
-    isCenter: true,
-  },
-  {
-    href: '/fitness',
-    icon: Dumbbell,
-    label: 'Fitness',
-  },
-  {
-    href: '/account/subscription',
-    icon: User,
-    label: 'Profile',
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function BottomNavigation() {
   const pathname = usePathname();
+  const t = useTranslations();
+
+  const navItems = [
+    {
+      href: '/dashboard',
+      icon: Home,
+      label: t('common.home'),
+    },
+    {
+      href: '/recipes',
+      icon: BookOpen,
+      label: t('nav.recipes'),
+    },
+    {
+      href: '/generator',
+      icon: Plus,
+      label: t('common.addAction'),
+      isCenter: true,
+    },
+    {
+      href: '/fitness',
+      icon: Dumbbell,
+      label: t('nav.fitness'),
+    },
+    {
+      href: '/account/subscription',
+      icon: User,
+      label: t('common.profile'),
+    },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-lg backdrop-blur-lg bg-opacity-95 dark:bg-opacity-95 pb-safe">

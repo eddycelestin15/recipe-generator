@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Sparkles, X, Loader2 } from 'lucide-react';
 import type { MealPlanGenerationCriteria } from '@/app/lib/types/meal-plan';
@@ -15,6 +16,7 @@ export default function GenerateMealPlan({
   onGenerate,
   defaultCalorieTarget = 2000,
 }: GenerateMealPlanProps) {
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -91,7 +93,7 @@ export default function GenerateMealPlan({
         className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:shadow-lg transition-all"
       >
         <Sparkles className="w-5 h-5" />
-        Générer plan hebdomadaire
+        {t('mealPlanning.generateWeeklyPlan')}
       </button>
 
       {/* Modal */}
@@ -103,7 +105,7 @@ export default function GenerateMealPlan({
               <div className="flex items-center gap-3">
                 <Sparkles className="w-6 h-6 text-orange-500" />
                 <h2 className="text-2xl font-bold text-gray-800">
-                  Générer plan de la semaine
+                  {t('mealPlanning.generatePlanTitle')}
                 </h2>
               </div>
               <button
@@ -120,7 +122,7 @@ export default function GenerateMealPlan({
               {/* Calorie target */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Objectif calorique quotidien
+                  {t('mealPlanning.dailyCalorieTarget')}
                 </label>
                 <input
                   type="number"
@@ -133,7 +135,7 @@ export default function GenerateMealPlan({
                   disabled={isGenerating}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Calories visées par jour (±200 calories)
+                  {t('mealPlanning.calorieTargetHelp')}
                 </p>
               </div>
 
@@ -149,10 +151,10 @@ export default function GenerateMealPlan({
                   />
                   <div>
                     <span className="text-sm font-medium text-gray-700">
-                      Varier les recettes
+                      {t('mealPlanning.varyRecipes')}
                     </span>
                     <p className="text-xs text-gray-500">
-                      Éviter de répéter les mêmes recettes trop souvent
+                      {t('mealPlanning.varyRecipesHelp')}
                     </p>
                   </div>
                 </label>
@@ -167,10 +169,10 @@ export default function GenerateMealPlan({
                   />
                   <div>
                     <span className="text-sm font-medium text-gray-700">
-                      Utiliser ingrédients du frigo
+                      {t('mealPlanning.useFridgeItems')}
                     </span>
                     <p className="text-xs text-gray-500">
-                      Priorité aux ingrédients disponibles et bientôt expirés
+                      {t('mealPlanning.useFridgeItemsHelp')}
                     </p>
                   </div>
                 </label>
@@ -185,10 +187,10 @@ export default function GenerateMealPlan({
                   />
                   <div>
                     <span className="text-sm font-medium text-gray-700">
-                      Adapter temps de préparation
+                      {t('mealPlanning.adaptPrepTime')}
                     </span>
                     <p className="text-xs text-gray-500">
-                      Recettes rapides en semaine, plus élaborées le week-end
+                      {t('mealPlanning.adaptPrepTimeHelp')}
                     </p>
                   </div>
                 </label>
@@ -203,10 +205,10 @@ export default function GenerateMealPlan({
                   />
                   <div>
                     <span className="text-sm font-medium text-gray-700">
-                      Équilibrer nutrition
+                      {t('mealPlanning.balanceNutrition')}
                     </span>
                     <p className="text-xs text-gray-500">
-                      Équilibrer les macros sur la semaine
+                      {t('mealPlanning.balanceNutritionHelp')}
                     </p>
                   </div>
                 </label>
@@ -215,7 +217,7 @@ export default function GenerateMealPlan({
               {/* Dietary preferences */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Préférences alimentaires (optionnel)
+                  {t('mealPlanning.dietaryPreferences')}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {dietaryOptions.map(option => (
@@ -238,9 +240,7 @@ export default function GenerateMealPlan({
               {/* Info box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Note:</strong> La génération utilise l'IA Gemini pour
-                  créer un plan optimisé basé sur vos recettes sauvegardées et vos
-                  critères. Cela peut prendre quelques secondes.
+                  {t('mealPlanning.generationNote')}
                 </p>
               </div>
             </div>
@@ -252,7 +252,7 @@ export default function GenerateMealPlan({
                 className="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 disabled={isGenerating}
               >
-                Annuler
+                {t('mealPlanning.cancel')}
               </button>
               <button
                 onClick={handleGenerate}
@@ -262,12 +262,12 @@ export default function GenerateMealPlan({
                 {isGenerating ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Génération en cours...
+                    {t('mealPlanning.generatingInProgress')}
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5" />
-                    Générer
+                    {t('mealPlanning.generate')}
                   </>
                 )}
               </button>

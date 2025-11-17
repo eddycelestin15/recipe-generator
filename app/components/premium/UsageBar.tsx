@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 interface UsageBarProps {
   current: number;
   limit: number;
@@ -8,6 +10,7 @@ interface UsageBarProps {
 }
 
 export default function UsageBar({ current, limit, label, unit = '' }: UsageBarProps) {
+  const t = useTranslations();
   const isUnlimited = limit === Infinity;
   const percentage = isUnlimited ? 0 : Math.min(100, (current / limit) * 100);
   const isNearLimit = percentage >= 80;
@@ -20,7 +23,7 @@ export default function UsageBar({ current, limit, label, unit = '' }: UsageBarP
         <span className="font-medium text-gray-700">{label}</span>
         <span className={`font-semibold ${isAtLimit ? 'text-red-600' : isNearLimit ? 'text-orange-600' : 'text-gray-600'}`}>
           {isUnlimited ? (
-            <span className="text-emerald-600">Unlimited</span>
+            <span className="text-emerald-600">{t('premium.unlimited')}</span>
           ) : (
             `${current} / ${limit}${unit}`
           )}
@@ -46,12 +49,12 @@ export default function UsageBar({ current, limit, label, unit = '' }: UsageBarP
       {/* Warning message */}
       {isAtLimit && (
         <p className="text-xs text-red-600">
-          You&apos;ve reached your limit. Upgrade to Premium for unlimited access.
+          {t('premium.limitReachedMessage')}
         </p>
       )}
       {isNearLimit && !isAtLimit && (
         <p className="text-xs text-orange-600">
-          You&apos;re approaching your limit. Consider upgrading to Premium.
+          {t('premium.approachingLimitMessage')}
         </p>
       )}
     </div>

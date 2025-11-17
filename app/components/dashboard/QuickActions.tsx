@@ -2,29 +2,32 @@
 
 import Link from 'next/link';
 import { Plus, TrendingUp, Calendar, Target } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function QuickActions() {
+  const t = useTranslations();
+
   const actions = [
     {
-      label: 'Logger Poids',
+      label: t('quickActions.logWeight'),
       icon: TrendingUp,
       href: '/progress',
       color: 'bg-blue-500 hover:bg-blue-600',
     },
     {
-      label: 'Ajouter Repas',
+      label: t('quickActions.addMeal'),
       icon: Plus,
       href: '/nutrition',
       color: 'bg-green-500 hover:bg-green-600',
     },
     {
-      label: 'Workout',
+      label: t('quickActions.workout'),
       icon: Calendar,
       href: '/fitness',
       color: 'bg-purple-500 hover:bg-purple-600',
     },
     {
-      label: 'Objectifs',
+      label: t('quickActions.goals'),
       icon: Target,
       href: '/goals',
       color: 'bg-orange-500 hover:bg-orange-600',
