@@ -16,7 +16,7 @@ const navItems = [
     label: 'Recipes',
   },
   {
-    href: '/',
+    href: '/generator',
     icon: Plus,
     label: 'Add',
     isCenter: true,
@@ -42,10 +42,7 @@ export default function BottomNavigation() {
         <div className="flex items-center justify-around h-16 relative">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive =
-              item.href === '/'
-                ? pathname === '/'
-                : pathname.startsWith(item.href);
+            const isActive = pathname.startsWith(item.href);
 
             if (item.isCenter) {
               return (

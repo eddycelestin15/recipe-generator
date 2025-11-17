@@ -234,7 +234,7 @@ export default function RecipesPage() {
             {recipes.length === 0 && (
               <div className="flex gap-4 justify-center">
                 <Link
-                  href="/"
+                  href="/generator"
                   className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600"
                 >
                   Générer une recette

@@ -55,7 +55,7 @@ export default function Navigation() {
       badge: null,
     },
     {
-      href: '/',
+      href: '/generator',
       icon: ChefHat,
       label: 'Générateur',
       badge: null,
@@ -128,10 +128,7 @@ export default function Navigation() {
           <div className="flex gap-4 items-center">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive =
-                item.href === '/'
-                  ? pathname === '/'
-                  : pathname.startsWith(item.href);
+              const isActive = pathname.startsWith(item.href);
 
               return (
                 <Link
