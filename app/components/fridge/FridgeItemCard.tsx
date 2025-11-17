@@ -62,7 +62,7 @@ export default function FridgeItemCard({ item, onEdit, onDelete, viewMode }: Fri
       return (
         <div className="flex items-center gap-1 px-2 py-1 bg-orange-500 text-white text-xs rounded-full">
           <Clock className="w-3 h-3" />
-          <span>{t('fridge.daysRemaining', { days: expirationStatus.daysRemaining })}</span>
+          <span>{t('fridge.daysRemaining', { days: expirationStatus.daysRemaining ?? 0 })}</span>
         </div>
       );
     }
@@ -71,7 +71,7 @@ export default function FridgeItemCard({ item, onEdit, onDelete, viewMode }: Fri
       return (
         <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
           <Clock className="w-3 h-3" />
-          <span>{t('fridge.daysRemaining', { days: expirationStatus.daysRemaining })}</span>
+          <span>{t('fridge.daysRemaining', { days: expirationStatus.daysRemaining ?? 0 })}</span>
         </div>
       );
     }
