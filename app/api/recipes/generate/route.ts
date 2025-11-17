@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GeminiAIService } from '@/app/lib/services/gemini-ai-service';
 import { FridgeRepository } from '@/app/lib/repositories/fridge-repository';
 import type { RecipeGenerationRequest } from '@/app/lib/types/recipe';
+import type { FridgeItem } from '@/app/lib/types/fridge';
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get fridge items if IDs provided
-    let fridgeItems = [];
+    let fridgeItems: FridgeItem[] = [];
     if (body.fridgeItemIds && body.fridgeItemIds.length > 0) {
       const allFridgeItems = await FridgeRepository.getAll();
       fridgeItems = allFridgeItems.filter((item) =>
