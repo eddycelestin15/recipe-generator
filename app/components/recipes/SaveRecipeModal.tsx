@@ -33,6 +33,11 @@ export default function SaveRecipeModal({ recipe, fridgeItemIds, onClose }: Save
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      // Normalize mealType to always be an array
+      const mealTypeArray = Array.isArray(recipe.mealType)
+        ? recipe.mealType
+        : [recipe.mealType];
+
       const savedRecipe = RecipeRepository.create({
         name: recipe.name,
         description: recipe.description,
@@ -43,7 +48,7 @@ export default function SaveRecipeModal({ recipe, fridgeItemIds, onClose }: Save
         servings: recipe.servings,
         difficulty: recipe.difficulty,
         cuisineType: recipe.cuisineType,
-        mealType: recipe.mealType,
+        mealType: mealTypeArray,
         tags,
         nutritionInfo: recipe.nutritionInfo,
         personalNotes: personalNotes || undefined,

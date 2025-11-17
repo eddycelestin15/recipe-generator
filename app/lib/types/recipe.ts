@@ -131,6 +131,8 @@ export interface RecipeFilters {
   difficulty?: RecipeDifficulty;
   cuisineType?: CuisineType;
   mealType?: MealType;
+  equipment?: string[]; // Available equipment (e.g., "oven", "blender", "slow-cooker")
+  batchCooking?: boolean; // Generate recipe in large quantities for meal prep
 }
 
 export interface UserPreferences {
@@ -150,13 +152,15 @@ export interface GeminiRecipeResponse {
   steps: string[];
   prepTime: number;
   cookTime: number;
+  totalTime?: number; // Total time (prep + cook)
   servings: number;
   difficulty: RecipeDifficulty;
   cuisineType: string;
-  mealType: MealType[];
+  mealType: MealType[] | MealType;
   nutritionInfo: NutritionInfo;
   tags?: string[];
   alternatives?: IngredientAlternative[];
+  tips?: string[]; // Cooking tips and tricks
 }
 
 export interface IngredientAlternative {

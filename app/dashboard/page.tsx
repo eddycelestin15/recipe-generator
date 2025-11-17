@@ -6,16 +6,12 @@ import { Scale, Flame, Dumbbell, TrendingUp, Award, Calendar } from 'lucide-reac
 import StatsCard from '../components/dashboard/StatsCard';
 import MacroCircle from '../components/dashboard/MacroCircle';
 import QuickActions from '../components/dashboard/QuickActions';
-import StoriesCarousel from '../components/stories/StoriesCarousel';
-import PullToRefreshWrapper from '../components/stories/PullToRefreshWrapper';
 import { DashboardSkeleton } from '../components/dashboard/skeletons/DashboardSkeleton';
-import { useStories } from '../hooks/useStories';
 import type { DashboardSummary } from '../lib/types/health-dashboard';
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [loading, setLoading] = useState(true);
-  const { stories, markAsViewed, addStory, refreshStories } = useStories();
 
   useEffect(() => {
     fetchDashboardData();
@@ -35,37 +31,12 @@ export default function DashboardPage() {
     }
   };
 
-  const handleAddStory = () => {
-    // TODO: Implement story creation modal/flow
-    console.log('Add story clicked');
-    alert('Fonctionnalité de création de story à venir !');
-  };
-
-  const handleViewStory = (story: any) => {
-    markAsViewed(story.id);
-    // TODO: Implement story viewer modal
-    console.log('View story:', story);
-    alert(`Affichage de la story de ${story.userName}`);
-  };
-
-  const handleRefresh = async () => {
-    await Promise.all([fetchDashboardData(), refreshStories()]);
-  };
-
   if (loading) {
     return <DashboardSkeleton />;
   }
 
   return (
-    <PullToRefreshWrapper onRefresh={handleRefresh}>
       <div className="bg-background min-h-full">
-        {/* Stories Carousel */}
-        <StoriesCarousel
-          stories={stories}
-          onAddStory={handleAddStory}
-          onViewStory={handleViewStory}
-        />
-
         <div className="max-w-lg mx-auto px-4 py-6">
           {/* Header */}
           <div className="mb-6">
@@ -243,6 +214,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-    </PullToRefreshWrapper>
   );
 }

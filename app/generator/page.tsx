@@ -15,9 +15,6 @@ import {
 } from '../lib/types/recipe';
 import { Refrigerator, Sparkles, Plus, X, Filter, Save } from 'lucide-react';
 import SaveRecipeModal from '../components/recipes/SaveRecipeModal';
-import StoriesCarousel from '../components/stories/StoriesCarousel';
-import PullToRefreshWrapper from '../components/stories/PullToRefreshWrapper';
-import { useStories } from '../hooks/useStories';
 
 // Force dynamic rendering - this page uses localStorage
 export const dynamic = 'force-dynamic';
@@ -36,9 +33,6 @@ export default function GeneratorPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<RecipeFilters>({});
   const [zeroWasteMode, setZeroWasteMode] = useState(false);
-
-  // Stories
-  const { stories, markAsViewed, addStory, refreshStories } = useStories();
 
   // Load fridge items on mount
   useEffect(() => {
@@ -133,30 +127,8 @@ export default function GeneratorPage() {
     return daysUntilExpiration >= 0 && daysUntilExpiration <= 3;
   });
 
-  const handleAddStory = () => {
-    alert('Fonctionnalité de création de story à venir !');
-  };
-
-  const handleViewStory = (story: any) => {
-    markAsViewed(story.id);
-    alert(`Affichage de la story de ${story.userName}`);
-  };
-
-  const handleRefresh = async () => {
-    loadFridgeItems();
-    await refreshStories();
-  };
-
   return (
-    <PullToRefreshWrapper onRefresh={handleRefresh}>
       <main className="bg-background min-h-full">
-        {/* Stories Carousel */}
-        <StoriesCarousel
-          stories={stories}
-          onAddStory={handleAddStory}
-          onViewStory={handleViewStory}
-        />
-
         <div className="p-4 md:p-6">
           <div className="max-w-lg mx-auto">
             {/* Header */}
@@ -563,6 +535,5 @@ export default function GeneratorPage() {
           </div>
         </div>
       </main>
-    </PullToRefreshWrapper>
   );
 }

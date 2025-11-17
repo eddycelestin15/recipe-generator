@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { HabitLogRepository } from '@/app/lib/repositories/habit-log-repository';
 import { HabitRepository } from '@/app/lib/repositories/habit-repository';
-import { AchievementService } from '@/app/lib/services/achievement-service';
-import { LogHabitDTO, Achievement } from '@/app/lib/types/habits';
+import { LogHabitDTO } from '@/app/lib/types/habits';
 
 /**
  * POST /api/habits/log - Log a habit completion
@@ -45,15 +44,8 @@ export async function POST(request: NextRequest) {
       notes: body.notes,
     });
 
-    // Check for new achievements if habit was completed
-    let newAchievements: Achievement[] = [];
-    if (body.completed) {
-      newAchievements = AchievementService.checkAndUnlock(body.habitId);
-    }
-
     return NextResponse.json({
       log,
-      newAchievements,
     }, { status: 201 });
   } catch (error) {
     console.error('Error logging habit:', error);
