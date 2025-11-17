@@ -1,6 +1,6 @@
 'use client';
 
-
+import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import WeeklyCalendar from '../components/meal-planning/WeeklyCalendar';
@@ -25,6 +25,7 @@ import { RecipeRepository } from '@/app/lib/repositories/recipe-repository';
 export const dynamic = 'force-dynamic';
 
 export default function MealPlanningPage() {
+  const t = useTranslations();
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(new Date()));
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
   const [shoppingList, setShoppingList] = useState<ShoppingList | null>(null);
@@ -74,7 +75,7 @@ export default function MealPlanningPage() {
       }
     } catch (err) {
       console.error('Error loading meal plan:', err);
-      setError('Erreur lors du chargement du plan');
+      setError(t('mealPlanning.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +119,7 @@ export default function MealPlanningPage() {
       }
     } catch (err) {
       console.error('Error updating meal slot:', err);
-      setError('Erreur lors de la mise à jour du repas');
+      setError(t('mealPlanning.updateError'));
     }
   };
 
@@ -139,7 +140,7 @@ export default function MealPlanningPage() {
       }
     } catch (err) {
       console.error('Error removing meal:', err);
-      setError('Erreur lors de la suppression du repas');
+      setError(t('mealPlanning.removeError'));
     }
   };
 
@@ -183,7 +184,7 @@ export default function MealPlanningPage() {
       }
     } catch (err) {
       console.error('Error generating meal plan:', err);
-      setError('Erreur lors de la génération du plan');
+      setError(t('mealPlanning.generateError'));
     } finally {
       setIsLoading(false);
     }
@@ -202,7 +203,7 @@ export default function MealPlanningPage() {
         body: JSON.stringify({
           mealPlanId: mealPlan.id,
           subtractFridge: true,
-          name: `Liste de courses - ${new Date().toLocaleDateString()}`,
+          name: `${t('mealPlanning.shoppingList')} - ${new Date().toLocaleDateString()}`,
         }),
       });
 
@@ -215,7 +216,7 @@ export default function MealPlanningPage() {
       setActiveView('shopping');
     } catch (err) {
       console.error('Error generating shopping list:', err);
-      setError('Erreur lors de la génération de la liste de courses');
+      setError(t('mealPlanning.generateShoppingListError'));
     } finally {
       setIsLoading(false);
     }
@@ -233,7 +234,7 @@ export default function MealPlanningPage() {
   const handleDeleteShoppingList = () => {
     if (!shoppingList) return;
 
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette liste de courses ?')) {
+    if (confirm(t('mealPlanning.deleteShoppingListConfirm'))) {
       ShoppingListRepository.delete(shoppingList.id);
       setShoppingList(null);
       setActiveView('calendar');
@@ -264,7 +265,7 @@ export default function MealPlanningPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-orange-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-gray-600">{t('mealPlanning.loading')}</p>
         </div>
       </div>
     );
@@ -284,10 +285,10 @@ export default function MealPlanningPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Planification de repas
+            {t('mealPlanning.title')}
           </h1>
           <p className="text-gray-600">
-            Organisez vos repas de la semaine et générez votre liste de courses
+            {t('mealPlanning.subtitle')}
           </p>
         </div>
 
@@ -316,7 +317,7 @@ export default function MealPlanningPage() {
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
             >
-              Calendrier
+              {t('mealPlanning.calendar')}
             </button>
             {shoppingList && (
               <button
@@ -327,7 +328,7 @@ export default function MealPlanningPage() {
                     : 'bg-white text-gray-700 hover:bg-gray-100'
                 }`}
               >
-                Liste de courses
+                {t('mealPlanning.shoppingList')}
               </button>
             )}
           </div>
@@ -339,7 +340,7 @@ export default function MealPlanningPage() {
                 className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:shadow-lg transition-all"
               >
                 <ShoppingCart className="w-5 h-5" />
-                Générer liste de courses
+                {t('mealPlanning.generateShoppingList')}
               </button>
             )}
 

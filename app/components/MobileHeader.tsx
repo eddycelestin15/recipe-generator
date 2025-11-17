@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ChefHat, Bell, Menu, Crown, CreditCard, Settings, Calendar, MessageCircle, Refrigerator } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
 
 export default function MobileHeader() {
+  const t = useTranslations();
   const [showMenu, setShowMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const { isPremium, isInTrial, trialDaysRemaining } = useSubscription();
@@ -19,7 +21,7 @@ export default function MobileHeader() {
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
             <ChefHat className="w-7 h-7 text-secondary" />
-            <span className="text-lg font-bold text-foreground">Recipe AI</span>
+            <span className="text-lg font-bold text-foreground">{t('nav.recipeAI')}</span>
             {isPremium && <PremiumBadge variant="small" />}
           </Link>
 
@@ -28,7 +30,7 @@ export default function MobileHeader() {
             {/* Trial badge */}
             {isInTrial && (
               <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full font-medium">
-                {trialDaysRemaining}d
+                {t('header.trialDays', { days: trialDaysRemaining })}
               </span>
             )}
 
@@ -36,7 +38,7 @@ export default function MobileHeader() {
             <Link
               href="/fridge"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
-              title="Smart Fridge"
+              title={t('nav.smartFridge')}
             >
               <Refrigerator className="w-5 h-5 text-foreground-secondary" />
             </Link>
@@ -45,7 +47,7 @@ export default function MobileHeader() {
             <Link
               href="/meal-planning"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
-              title="Meal Planning"
+              title={t('nav.mealPlanning')}
             >
               <Calendar className="w-5 h-5 text-foreground-secondary" />
             </Link>
@@ -54,7 +56,7 @@ export default function MobileHeader() {
             <Link
               href="/ai-coach"
               className="p-2 rounded-full hover:bg-muted transition-all duration-200"
-              title="AI Coach"
+              title={t('nav.aiCoach')}
             >
               <MessageCircle className="w-5 h-5 text-foreground-secondary" />
             </Link>
@@ -84,10 +86,10 @@ export default function MobileHeader() {
                   />
                   <div className="absolute right-0 mt-2 w-72 bg-card rounded-xl shadow-xl border border-border py-2 z-20 max-h-96 overflow-y-auto">
                     <div className="px-4 py-3 border-b border-border">
-                      <h3 className="font-semibold text-foreground">Notifications</h3>
+                      <h3 className="font-semibold text-foreground">{t('header.notifications')}</h3>
                     </div>
                     <div className="px-4 py-8 text-center text-foreground-tertiary text-sm">
-                      No new notifications
+                      {t('header.noNotifications')}
                     </div>
                   </div>
                 </>
@@ -121,7 +123,7 @@ export default function MobileHeader() {
                       >
                         <Crown className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                         <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                          Upgrade to Premium
+                          {t('nav.upgradeToPremium')}
                         </span>
                       </Link>
                     )}
@@ -131,7 +133,7 @@ export default function MobileHeader() {
                       className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all duration-200"
                     >
                       <CreditCard className="w-5 h-5 text-foreground-tertiary" />
-                      <span className="text-foreground-secondary">Subscription</span>
+                      <span className="text-foreground-secondary">{t('nav.subscription')}</span>
                     </Link>
                     <Link
                       href="/settings"
@@ -139,7 +141,7 @@ export default function MobileHeader() {
                       className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all duration-200"
                     >
                       <Settings className="w-5 h-5 text-foreground-tertiary" />
-                      <span className="text-foreground-secondary">Settings</span>
+                      <span className="text-foreground-secondary">{t('common.settings')}</span>
                     </Link>
                   </div>
                 </>

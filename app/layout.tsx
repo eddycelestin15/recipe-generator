@@ -8,7 +8,7 @@ import HabitsInitializer from "./components/HabitsInitializer";
 import AIInsightsInitializer from "./components/AIInsightsInitializer";
 import InstallPrompt from "./components/InstallPrompt";
 import { cookies } from "next/headers";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,71 +20,77 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Recipe Health App - AI Recipe Generator & Smart Fridge",
-    template: "%s | Recipe Health App"
-  },
-  description: "AI-powered recipe generator with health tracking, smart fridge management, and personalized nutrition. Create delicious recipes with ingredients you have, track your meals, and achieve your fitness goals.",
-  applicationName: "Recipe Health App",
-  keywords: ["recipe generator", "AI recipes", "health tracking", "nutrition", "smart fridge", "meal planning", "fitness", "diet"],
-  authors: [{ name: "Recipe Health Team" }],
-  creator: "Recipe Health Team",
-  publisher: "Recipe Health Team",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "RecipeHealth",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-  manifest: "/manifest.json",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" }
-  ],
-  openGraph: {
-    type: "website",
-    locale: "fr_FR",
-    url: "https://recipehealth.app",
-    title: "Recipe Health App - AI Recipe Generator & Smart Fridge",
-    description: "AI-powered recipe generator with health tracking, smart fridge management, and personalized nutrition",
-    siteName: "Recipe Health App",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Recipe Health App - AI Recipe Generator",
-    description: "AI-powered recipe generator with health tracking and smart fridge management",
-  },
-  icons: {
-    icon: [
-      { url: "/icon-72x72.png", sizes: "72x72", type: "image/png" },
-      { url: "/icon-96x96.png", sizes: "96x96", type: "image/png" },
-      { url: "/icon-128x128.png", sizes: "128x128", type: "image/png" },
-      { url: "/icon-144x144.png", sizes: "144x144", type: "image/png" },
-      { url: "/icon-152x152.png", sizes: "152x152", type: "image/png" },
-      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-384x384.png", sizes: "384x384", type: "image/png" },
-      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('locale')?.value || 'en';
+  const t = await getTranslations({ locale, namespace: 'meta' });
+
+  return {
+    title: {
+      default: t('defaultTitle'),
+      template: t('titleTemplate')
+    },
+    description: t('description'),
+    applicationName: "Recipe Health App",
+    keywords: t('keywords').split(', '),
+    authors: [{ name: "Recipe Health Team" }],
+    creator: "Recipe Health Team",
+    publisher: "Recipe Health Team",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: t('appTitle'),
+    },
+    formatDetection: {
+      telephone: false,
+    },
+    manifest: "/manifest.json",
+    themeColor: [
+      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+      { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" }
     ],
-    apple: [
-      { url: "/icon-152x152.png", sizes: "152x152", type: "image/png" },
-      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
-    ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    openGraph: {
+      type: "website",
+      locale: locale === 'fr' ? 'fr_FR' : 'en_US',
+      url: "https://recipehealth.app",
+      title: t('ogTitle'),
+      description: t('ogDescription'),
+      siteName: "Recipe Health App",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t('twitterTitle'),
+      description: t('twitterDescription'),
+    },
+    icons: {
+      icon: [
+        { url: "/icon-72x72.png", sizes: "72x72", type: "image/png" },
+        { url: "/icon-96x96.png", sizes: "96x96", type: "image/png" },
+        { url: "/icon-128x128.png", sizes: "128x128", type: "image/png" },
+        { url: "/icon-144x144.png", sizes: "144x144", type: "image/png" },
+        { url: "/icon-152x152.png", sizes: "152x152", type: "image/png" },
+        { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icon-384x384.png", sizes: "384x384", type: "image/png" },
+        { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [
+        { url: "/icon-152x152.png", sizes: "152x152", type: "image/png" },
+        { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      ],
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-};
+  };
+}
 
 export const viewport: Viewport = {
   width: 'device-width',

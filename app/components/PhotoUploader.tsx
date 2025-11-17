@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { Camera, Upload, Loader2, CheckCircle, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { FoodPhotoAnalysis } from '../lib/types/ai';
 
 export default function PhotoUploader() {
+  const t = useTranslations();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -16,7 +18,7 @@ export default function PhotoUploader() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image');
+      alert(t('photo.selectImageError'));
       return;
     }
 
@@ -49,7 +51,7 @@ export default function PhotoUploader() {
       const data = await response.json();
 
       if (response.status === 429) {
-        alert(data.message || 'Limite d\'analyses atteinte');
+        alert(data.message || t('photo.limitReached'));
         return;
       }
 
@@ -61,7 +63,7 @@ export default function PhotoUploader() {
       setRemaining(data.remaining);
     } catch (error) {
       console.error('Error analyzing photo:', error);
-      alert('Erreur lors de l\'analyse de la photo');
+      alert(t('photo.analysisError'));
     } finally {
       setIsAnalyzing(false);
     }
@@ -73,7 +75,7 @@ export default function PhotoUploader() {
     try {
       // Create custom food from analysis
       const customFood = {
-        name: `Analyse photo - ${new Date().toLocaleDateString()}`,
+        name: `${t('photo.photoAnalysis')} - ${new Date().toLocaleDateString()}`,
         calories: analysis.totalEstimated.calories,
         protein: analysis.totalEstimated.protein,
         carbs: analysis.totalEstimated.carbs,
@@ -88,7 +90,7 @@ export default function PhotoUploader() {
           mealType: 'lunch', // Default to lunch
           customFood,
           servings: 1,
-          notes: `Analysé par IA: ${analysis.overallAssessment}`,
+          notes: `${t('photo.analyzedByAI')}: ${analysis.overallAssessment}`,
         }),
       });
 
@@ -101,11 +103,11 @@ export default function PhotoUploader() {
         method: 'POST',
       });
 
-      alert('Repas ajouté au journal !');
+      alert(t('photo.mealAdded'));
       resetForm();
     } catch (error) {
       console.error('Error adding to meal log:', error);
-      alert('Erreur lors de l\'ajout au journal');
+      alert(t('photo.addMealError'));
     }
   };
 
@@ -123,16 +125,16 @@ export default function PhotoUploader() {
           <Camera className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Analyse de Photo</h2>
+          <h2 className="text-2xl font-bold text-gray-800">{t('photo.title')}</h2>
           <p className="text-sm text-gray-600">
-            Identifiez les aliments et estimez les valeurs nutritionnelles
+            {t('photo.description')}
           </p>
         </div>
       </div>
 
       {remaining !== null && (
         <div className="mb-4 px-4 py-2 bg-blue-50 rounded-lg text-sm text-blue-700">
-          {remaining} analyses restantes aujourd'hui
+          {t('photo.remainingAnalyses', { count: remaining })}
         </div>
       )}
 
@@ -153,14 +155,14 @@ export default function PhotoUploader() {
             <Upload className="w-16 h-16 text-gray-400" />
             <div>
               <p className="text-lg font-medium text-gray-700">
-                Cliquez pour télécharger une photo
+                {t('photo.uploadPrompt')}
               </p>
               <p className="text-sm text-gray-500 mt-1">
-                ou glissez-déposez votre image ici
+                {t('photo.dragDrop')}
               </p>
             </div>
             <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600">
-              Sélectionner une photo
+              {t('photo.selectPhoto')}
             </button>
           </label>
         </div>
@@ -178,7 +180,7 @@ export default function PhotoUploader() {
                 onClick={resetForm}
                 className="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600"
               >
-                Changer
+                {t('photo.change')}
               </button>
             )}
           </div>
@@ -190,7 +192,7 @@ export default function PhotoUploader() {
               className="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 flex items-center justify-center gap-2"
             >
               <Camera className="w-5 h-5" />
-              Analyser la photo
+              {t('photo.analyzePhoto')}
             </button>
           )}
 
@@ -198,7 +200,7 @@ export default function PhotoUploader() {
           {isAnalyzing && (
             <div className="text-center py-8">
               <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
-              <p className="text-gray-600">Analyse en cours...</p>
+              <p className="text-gray-600">{t('photo.analyzing')}</p>
             </div>
           )}
 
@@ -211,7 +213,7 @@ export default function PhotoUploader() {
                   <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-1">
-                      Analyse complétée
+                      {t('photo.analysisComplete')}
                     </h3>
                     <p className="text-sm text-gray-700">
                       {analysis.overallAssessment}
@@ -223,7 +225,7 @@ export default function PhotoUploader() {
               {/* Identified foods */}
               <div>
                 <h3 className="font-semibold text-gray-800 mb-3">
-                  Aliments identifiés:
+                  {t('photo.identifiedFoods')}
                 </h3>
                 <div className="space-y-2">
                   {analysis.identifiedFoods.map((food, index) => (
@@ -234,7 +236,7 @@ export default function PhotoUploader() {
                       <div>
                         <p className="font-medium text-gray-800">{food.name}</p>
                         <p className="text-sm text-gray-600">
-                          Portion: {food.portion} • Confiance:{' '}
+                          {t('photo.portion')}: {food.portion} • {t('photo.confidence')}:{' '}
                           {(food.confidence * 100).toFixed(0)}%
                         </p>
                       </div>
@@ -255,29 +257,29 @@ export default function PhotoUploader() {
               {/* Total nutrition */}
               <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-800 mb-3">
-                  Total estimé:
+                  {t('photo.totalEstimated')}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Calories</p>
+                    <p className="text-sm text-gray-600">{t('photo.calories')}</p>
                     <p className="text-2xl font-bold text-orange-600">
                       {analysis.totalEstimated.calories}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Protéines</p>
+                    <p className="text-sm text-gray-600">{t('photo.protein')}</p>
                     <p className="text-2xl font-bold text-blue-600">
                       {analysis.totalEstimated.protein}g
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Glucides</p>
+                    <p className="text-sm text-gray-600">{t('photo.carbs')}</p>
                     <p className="text-2xl font-bold text-green-600">
                       {analysis.totalEstimated.carbs}g
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Lipides</p>
+                    <p className="text-sm text-gray-600">{t('photo.fat')}</p>
                     <p className="text-2xl font-bold text-purple-600">
                       {analysis.totalEstimated.fat}g
                     </p>
@@ -292,13 +294,13 @@ export default function PhotoUploader() {
                   className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-medium hover:from-green-600 hover:to-emerald-600 flex items-center justify-center gap-2"
                 >
                   <Plus className="w-5 h-5" />
-                  Ajouter au journal
+                  {t('photo.addToJournal')}
                 </button>
                 <button
                   onClick={resetForm}
                   className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300"
                 >
-                  Nouvelle photo
+                  {t('photo.newPhoto')}
                 </button>
               </div>
             </div>

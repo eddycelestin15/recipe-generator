@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Refrigerator, ChefHat, BookOpen, Activity, Calendar, Dumbbell, LayoutDashboard, Target, Sparkles, Brain, Crown, User, CreditCard, MessageCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useSubscription } from '@/app/lib/hooks/useSubscription';
 import PremiumBadge from '@/app/components/premium/PremiumBadge';
 import ThemeToggle from '@/app/components/ThemeToggle';
 
 export default function Navigation() {
+  const t = useTranslations();
   const [expiringCount, setExpiringCount] = useState(0);
   const [insightsCount, setInsightsCount] = useState(0);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
@@ -51,61 +53,61 @@ export default function Navigation() {
     {
       href: '/dashboard',
       icon: LayoutDashboard,
-      label: 'Dashboard',
+      label: t('nav.dashboard'),
       badge: null,
     },
     {
       href: '/generator',
       icon: ChefHat,
-      label: 'Générateur',
+      label: t('nav.generator'),
       badge: null,
     },
     {
       href: '/recipes',
       icon: BookOpen,
-      label: 'Bibliothèque',
+      label: t('nav.library'),
       badge: null,
     },
     {
       href: '/meal-planning',
       icon: Calendar,
-      label: 'Planification',
+      label: t('nav.planning'),
       badge: null,
     },
     {
       href: '/fridge',
       icon: Refrigerator,
-      label: 'Mon Frigo',
+      label: t('nav.fridge'),
       badge: expiringCount > 0 ? expiringCount : null,
     },
     {
       href: '/nutrition',
       icon: Activity,
-      label: 'Nutrition',
+      label: t('nav.nutrition'),
       badge: null,
     },
     {
       href: '/fitness',
       icon: Dumbbell,
-      label: 'Fitness',
+      label: t('nav.fitness'),
       badge: null,
     },
     {
       href: '/habits',
       icon: Target,
-      label: 'Habitudes',
+      label: t('nav.habits'),
       badge: null,
     },
     {
       href: '/ai-coach',
       icon: Brain,
-      label: 'Coach IA',
+      label: t('nav.aiCoach'),
       badge: null,
     },
     {
       href: '/insights',
       icon: Sparkles,
-      label: 'Insights',
+      label: t('nav.insights'),
       badge: insightsCount > 0 ? insightsCount : null,
     },
   ];
@@ -116,11 +118,11 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-2">
             <ChefHat className="w-8 h-8 text-secondary" />
-            <span className="text-xl font-bold text-foreground">AI Recipe Generator</span>
+            <span className="text-xl font-bold text-foreground">{t('nav.appTitle')}</span>
             {isPremium && <PremiumBadge variant="small" />}
             {isInTrial && (
               <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full font-medium">
-                Trial: {trialDaysRemaining}d left
+                {t('header.trialDaysLeft', { days: trialDaysRemaining })}
               </span>
             )}
           </div>
@@ -155,7 +157,7 @@ export default function Navigation() {
             <Link
               href="/weekly-planning"
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-foreground-secondary hover:bg-muted hover:text-foreground transition-all duration-200"
-              title="Weekly Meal Planning"
+              title={t('nav.weeklyMealPlanning')}
             >
               <Calendar className="w-5 h-5" />
             </Link>
@@ -164,7 +166,7 @@ export default function Navigation() {
             <Link
               href="/ai-nutritionist"
               className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-foreground-secondary hover:bg-muted hover:text-foreground transition-all duration-200"
-              title="AI Nutritionist"
+              title={t('nav.aiNutritionist')}
             >
               <MessageCircle className="w-5 h-5" />
             </Link>
@@ -194,7 +196,7 @@ export default function Navigation() {
                       className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all duration-200"
                     >
                       <CreditCard className="w-5 h-5 text-foreground-tertiary" />
-                      <span className="text-foreground-secondary">Subscription</span>
+                      <span className="text-foreground-secondary">{t('nav.subscription')}</span>
                     </Link>
                     {!isPremium && (
                       <Link
@@ -203,7 +205,7 @@ export default function Navigation() {
                         className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all duration-200 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30"
                       >
                         <Crown className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">Upgrade to Premium</span>
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{t('nav.upgradeToPremium')}</span>
                       </Link>
                     )}
                   </div>

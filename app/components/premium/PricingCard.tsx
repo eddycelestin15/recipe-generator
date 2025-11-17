@@ -1,6 +1,7 @@
 'use client';
 
 import { Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { PRICING } from '@/app/lib/types/subscription';
 
 interface PricingCardProps {
@@ -96,6 +97,7 @@ const planDetails: Record<'free' | 'monthly' | 'yearly', PlanDetail> = {
 };
 
 export default function PricingCard({ plan, isCurrentPlan, onSelect }: PricingCardProps) {
+  const t = useTranslations();
   const details = planDetails[plan];
 
   return (
@@ -109,12 +111,12 @@ export default function PricingCard({ plan, isCurrentPlan, onSelect }: PricingCa
       {/* Badge */}
       {details.popular && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-          Most Popular
+          {t('pricing.mostPopular')}
         </div>
       )}
       {details.bestValue && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-          Best Value
+          {t('pricing.bestValue')}
         </div>
       )}
       {details.badge && (
@@ -139,7 +141,7 @@ export default function PricingCard({ plan, isCurrentPlan, onSelect }: PricingCa
         </div>
         {plan === 'yearly' && (
           <p className="text-sm text-gray-500 mt-1">
-            €{(PRICING.yearly.amount / 12).toFixed(2)}/month billed annually
+            {t('pricing.billedAnnually', { amount: (PRICING.yearly.amount / 12).toFixed(2) })}
           </p>
         )}
       </div>
@@ -156,13 +158,13 @@ export default function PricingCard({ plan, isCurrentPlan, onSelect }: PricingCa
             : 'bg-gray-900 text-white hover:bg-gray-800'
         }`}
       >
-        {isCurrentPlan ? 'Current Plan' : plan === 'free' ? 'Get Started' : 'Start 7-Day Trial'}
+        {isCurrentPlan ? t('pricing.currentPlan') : plan === 'free' ? t('pricing.getStarted') : t('pricing.startTrial')}
       </button>
 
       {/* Features */}
       <div className="space-y-3">
         <p className="text-sm font-semibold text-gray-900 mb-3">
-          {plan === 'free' ? 'What\'s included:' : 'Everything in Free, plus:'}
+          {plan === 'free' ? t('pricing.whatsIncluded') : t('pricing.everythingPlus')}
         </p>
         {details.features.map((feature, index) => (
           <div key={index} className="flex items-start gap-3">
@@ -176,7 +178,7 @@ export default function PricingCard({ plan, isCurrentPlan, onSelect }: PricingCa
       {plan !== 'free' && !isCurrentPlan && (
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-900">
-            <strong>7-day free trial</strong> - Cancel anytime during trial, no charge.
+            {t('pricing.trialNotice')}
           </p>
         </div>
       )}

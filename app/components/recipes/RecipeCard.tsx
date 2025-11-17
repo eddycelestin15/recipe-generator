@@ -5,6 +5,7 @@ import { Recipe } from '@/app/lib/types/recipe';
 import { Heart, MessageCircle, Send, Bookmark, Flame, Clock, ChefHat } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -14,6 +15,7 @@ interface RecipeCardProps {
 
 export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: RecipeCardProps) {
   const router = useRouter();
+  const t = useTranslations();
   // Optimistic UI state for favorite
   const [isFavoriteOptimistic, setIsFavoriteOptimistic] = useState(recipe.isFavorite);
 
@@ -28,22 +30,22 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
     if (diffDays > 7) {
       return new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
     } else if (diffDays > 0) {
-      return `Il y a ${diffDays}j`;
+      return t('time.daysAgo', { days: diffDays });
     } else if (diffHours > 0) {
-      return `Il y a ${diffHours}h`;
+      return t('time.hoursAgo', { hours: diffHours });
     } else if (diffMins > 0) {
-      return `Il y a ${diffMins}m`;
+      return t('time.minutesAgo', { minutes: diffMins });
     } else {
-      return 'À l\'instant';
+      return t('time.justNow');
     }
   };
 
   // Get username/chef name based on recipe
   const getChefName = () => {
     if (recipe.isGenerated) {
-      return 'Chef IA';
+      return t('recipes.aiChef');
     }
-    return `Chef ${recipe.cuisineType}`;
+    return t('recipes.chef', { cuisine: recipe.cuisineType });
   };
 
   // Get avatar color based on cuisine type
@@ -102,12 +104,12 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
         <button
           onClick={(e) => {
             e.stopPropagation();
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette recette ?')) {
+            if (confirm(t('recipes.deleteConfirm'))) {
               onDelete(recipe.id);
             }
           }}
           className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          aria-label="Options"
+          aria-label={t('common.options')}
         >
           <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="5" r="1.5"/>
@@ -140,7 +142,7 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
               ? 'bg-yellow-500/90 text-white'
               : 'bg-red-500/90 text-white'
           }`}>
-            {recipe.difficulty === 'easy' ? 'Facile' : recipe.difficulty === 'medium' ? 'Moyen' : 'Difficile'}
+            {recipe.difficulty === 'easy' ? t('recipes.difficultyEasy') : recipe.difficulty === 'medium' ? t('recipes.difficultyMedium') : t('recipes.difficultyHard')}
           </span>
         </div>
       </div>
@@ -154,7 +156,7 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
             <button
               onClick={handleFavoriteClick}
               className="group/heart hover:scale-110 transition-transform duration-200 active:scale-95"
-              aria-label={isFavoriteOptimistic ? 'Remove from favorites' : 'Add to favorites'}
+              aria-label={isFavoriteOptimistic ? t('recipes.removeFromFavorites') : t('recipes.addToFavorites')}
             >
               <Heart
                 className={`w-7 h-7 transition-all duration-200 ${
@@ -168,7 +170,7 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
             {/* Comment (shows number of steps) */}
             <button
               className="hover:scale-110 transition-transform duration-200 relative"
-              aria-label="Recipe steps"
+              aria-label={t('recipes.recipeSteps')}
             >
               <MessageCircle className="w-7 h-7 text-gray-800 hover:text-gray-500 transition-colors" />
               <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -179,7 +181,7 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
             {/* Share */}
             <button
               className="hover:scale-110 transition-transform duration-200"
-              aria-label="Share recipe"
+              aria-label={t('recipes.shareRecipe')}
             >
               <Send className="w-7 h-7 text-gray-800 hover:text-gray-500 transition-colors" />
             </button>
@@ -189,7 +191,7 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
           <button
             onClick={handleFavoriteClick}
             className="hover:scale-110 transition-transform duration-200 active:scale-95"
-            aria-label="Save recipe"
+            aria-label={t('recipes.saveRecipe')}
           >
             <Bookmark
               className={`w-7 h-7 transition-all duration-200 ${
@@ -205,24 +207,24 @@ export default function RecipeCard({ recipe, onToggleFavorite, onDelete }: Recip
         <div className="flex flex-wrap gap-2 mb-3">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-sm">
             <Flame className="w-3.5 h-3.5" />
-            <span className="text-xs font-semibold">{recipe.nutritionInfo.calories} cal</span>
+            <span className="text-xs font-semibold">{recipe.nutritionInfo.calories} {t('nutrition.cal')}</span>
           </div>
 
           <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-sm">
-            <span className="text-xs font-semibold">{recipe.nutritionInfo.protein}g protéines</span>
+            <span className="text-xs font-semibold">{recipe.nutritionInfo.protein}g {t('nutrition.protein')}</span>
           </div>
 
           <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-sm">
-            <span className="text-xs font-semibold">{recipe.nutritionInfo.carbs}g glucides</span>
+            <span className="text-xs font-semibold">{recipe.nutritionInfo.carbs}g {t('nutrition.carbs')}</span>
           </div>
 
           <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-sm">
-            <span className="text-xs font-semibold">{recipe.nutritionInfo.fat}g lipides</span>
+            <span className="text-xs font-semibold">{recipe.nutritionInfo.fat}g {t('nutrition.fat')}</span>
           </div>
 
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-sm">
             <Clock className="w-3.5 h-3.5" />
-            <span className="text-xs font-semibold">{totalTime} min</span>
+            <span className="text-xs font-semibold">{totalTime} {t('time.min')}</span>
           </div>
         </div>
 

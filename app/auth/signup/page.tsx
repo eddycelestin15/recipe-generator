@@ -4,6 +4,7 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { Label } from "@/app/components/ui/label"
@@ -11,6 +12,7 @@ import { Checkbox } from "@/app/components/ui/checkbox"
 
 export default function SignUpPage() {
   const router = useRouter()
+  const t = useTranslations()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -35,24 +37,24 @@ export default function SignUpPage() {
 
     // Validation
     if (!formData.acceptTerms) {
-      setError("You must accept the Terms & Conditions and Privacy Policy to continue")
+      setError(t('auth.termsRequired'))
       return
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
+      setError(t('auth.passwordMismatch'))
       return
     }
 
     if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters long")
+      setError(t('auth.passwordTooShort'))
       return
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
-      setError("Please enter a valid email address")
+      setError(t('auth.invalidEmail'))
       return
     }
 
@@ -75,7 +77,7 @@ export default function SignUpPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || "Failed to create account")
+        setError(data.error || t('auth.createAccountFailed'))
         setLoading(false)
         return
       }
@@ -88,14 +90,14 @@ export default function SignUpPage() {
       })
 
       if (result?.error) {
-        setError("Account created but failed to sign in. Please try signing in manually.")
+        setError(t('auth.createAccountSignInFailed'))
         setLoading(false)
       } else {
         // Redirect to onboarding
         router.push("/auth/onboarding")
       }
     } catch (error) {
-      setError("An error occurred. Please try again.")
+      setError(t('auth.genericError'))
       setLoading(false)
     }
   }
@@ -103,20 +105,20 @@ export default function SignUpPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create your account</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('auth.signUpTitle')}</h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Start your journey to better health
+          {t('auth.signUpSubtitle')}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-gray-900 dark:text-white">Full Name</Label>
+          <Label htmlFor="name" className="text-gray-900 dark:text-white">{t('auth.fullName')}</Label>
           <Input
             id="name"
             name="name"
             type="text"
-            placeholder="John Doe"
+            placeholder={t('auth.fullNamePlaceholder')}
             value={formData.name}
             onChange={handleChange}
             required
@@ -126,12 +128,12 @@ export default function SignUpPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-gray-900 dark:text-white">Email Address</Label>
+          <Label htmlFor="email" className="text-gray-900 dark:text-white">{t('auth.email')}</Label>
           <Input
             id="email"
             name="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t('auth.emailPlaceholder')}
             value={formData.email}
             onChange={handleChange}
             required
@@ -141,28 +143,28 @@ export default function SignUpPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-gray-900 dark:text-white">Password</Label>
+          <Label htmlFor="password" className="text-gray-900 dark:text-white">{t('auth.password')}</Label>
           <Input
             id="password"
             name="password"
             type="password"
-            placeholder="Minimum 8 characters"
+            placeholder={t('auth.confirmPasswordPlaceholder')}
             value={formData.password}
             onChange={handleChange}
             required
             disabled={loading}
             className="h-11"
           />
-          <p className="text-xs text-gray-500 dark:text-gray-400">Must be at least 8 characters long</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{t('auth.passwordMinLength')}</p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-gray-900 dark:text-white">Confirm Password</Label>
+          <Label htmlFor="confirmPassword" className="text-gray-900 dark:text-white">{t('auth.confirmPassword')}</Label>
           <Input
             id="confirmPassword"
             name="confirmPassword"
             type="password"
-            placeholder="Confirm your password"
+            placeholder={t('auth.confirmPasswordPlaceholder')}
             value={formData.confirmPassword}
             onChange={handleChange}
             required
@@ -186,13 +188,13 @@ export default function SignUpPage() {
             htmlFor="acceptTerms"
             className="text-sm font-normal text-gray-700 dark:text-gray-300 leading-relaxed cursor-pointer"
           >
-            I agree to the{" "}
+            {t('auth.termsAcceptance')}{" "}
             <Link href="/legal/terms" target="_blank" className="text-orange-600 dark:text-orange-400 hover:underline font-medium">
-              Terms & Conditions
+              {t('auth.termsLink')}
             </Link>
-            {" "}and{" "}
+            {" "}{t('auth.and')}{" "}
             <Link href="/legal/privacy" target="_blank" className="text-orange-600 dark:text-orange-400 hover:underline font-medium">
-              Privacy Policy
+              {t('auth.privacyLink')}
             </Link>
           </Label>
         </div>
@@ -207,28 +209,28 @@ export default function SignUpPage() {
           {loading ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Creating account...
+              {t('auth.creatingAccount')}
             </div>
           ) : (
-            "Create account"
+            t('auth.createAccount')
           )}
         </Button>
       </form>
 
       <div className="space-y-3">
         <div className="text-sm text-center text-gray-600 dark:text-gray-400">
-          Already have an account?{" "}
+          {t('auth.hasAccount')}{" "}
           <Link href="/auth/signin" className="text-orange-600 dark:text-orange-400 hover:underline font-medium">
-            Sign in
+            {t('auth.signIn')}
           </Link>
         </div>
 
         <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 text-center border border-orange-100 dark:border-orange-800">
           <p className="text-sm text-orange-800 dark:text-orange-400 font-medium">
-            Free Forever Plan
+            {t('auth.freePlanNotice')}
           </p>
           <p className="text-xs text-orange-700 dark:text-orange-500 mt-1">
-            No credit card required. Upgrade anytime.
+            {t('auth.freePlanDesc')}
           </p>
         </div>
       </div>

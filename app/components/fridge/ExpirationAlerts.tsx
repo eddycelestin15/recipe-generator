@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { FridgeItem } from '@/app/lib/types/fridge';
 import { getExpirationStatus } from '@/app/lib/utils/fridge-helpers';
 import { AlertTriangle, X } from 'lucide-react';
@@ -10,7 +11,22 @@ interface ExpirationAlertsProps {
 }
 
 export default function ExpirationAlerts({ items }: ExpirationAlertsProps) {
+  const t = useTranslations();
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
+
+  const getCategoryLabel = (category: string): string => {
+    const categoryMap: Record<string, string> = {
+      'Fruits': t('fridge.categories.fruits'),
+      'Légumes': t('fridge.categories.vegetables'),
+      'Viandes': t('fridge.categories.meats'),
+      'Poissons': t('fridge.categories.fish'),
+      'Produits laitiers': t('fridge.categories.dairy'),
+      'Céréales': t('fridge.categories.grains'),
+      'Condiments': t('fridge.categories.condiments'),
+      'Autre': t('fridge.categories.other'),
+    };
+    return categoryMap[category] || category;
+  };
 
   const expiringItems = items.filter((item) => {
     if (!item.expirationDate || dismissed.has(item.id)) return false;
@@ -41,16 +57,16 @@ export default function ExpirationAlerts({ items }: ExpirationAlertsProps) {
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
             <div>
-              <p className="font-medium text-red-800">Article expiré</p>
+              <p className="font-medium text-red-800">{t('fridge.itemExpired')}</p>
               <p className="text-sm text-red-700">
-                <span className="font-semibold">{item.name}</span> ({item.category}) a expiré et devrait être retiré du frigo.
+                {t('fridge.expiredMessage', { name: item.name, category: getCategoryLabel(item.category) })}
               </p>
             </div>
           </div>
           <button
             onClick={() => handleDismiss(item.id)}
             className="p-1 hover:bg-red-100 rounded-full transition-colors flex-shrink-0"
-            aria-label="Masquer l'alerte"
+            aria-label={t('fridge.dismissAlert')}
           >
             <X className="w-4 h-4 text-red-500" />
           </button>
@@ -67,17 +83,20 @@ export default function ExpirationAlerts({ items }: ExpirationAlertsProps) {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-orange-800">Article expirant bientôt</p>
+                <p className="font-medium text-orange-800">{t('fridge.itemExpiringSoon')}</p>
                 <p className="text-sm text-orange-700">
-                  <span className="font-semibold">{item.name}</span> ({item.category}) expire dans{' '}
-                  <span className="font-semibold">{status.daysRemaining} jour{status.daysRemaining! > 1 ? 's' : ''}</span>.
+                  {t('fridge.expiringSoonMessage', {
+                    name: item.name,
+                    category: getCategoryLabel(item.category),
+                    days: status.daysRemaining
+                  })}
                 </p>
               </div>
             </div>
             <button
               onClick={() => handleDismiss(item.id)}
               className="p-1 hover:bg-orange-100 rounded-full transition-colors flex-shrink-0"
-              aria-label="Masquer l'alerte"
+              aria-label={t('fridge.dismissAlert')}
             >
               <X className="w-4 h-4 text-orange-500" />
             </button>

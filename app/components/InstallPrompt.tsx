@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X, Download, Smartphone } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -9,6 +10,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export default function InstallPrompt() {
+  const t = useTranslations();
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
@@ -115,7 +117,7 @@ export default function InstallPrompt() {
           <button
             onClick={handleDismiss}
             className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Fermer"
+            aria-label={t('install.close')}
           >
             <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
@@ -129,14 +131,14 @@ export default function InstallPrompt() {
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
-            Installer Recipe Health
+            {t('install.title')}
           </h2>
 
           {/* Description */}
           <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
             {isIOS
-              ? "Installez l'application sur votre écran d'accueil pour un accès rapide et une meilleure expérience."
-              : "Profitez d'une expérience optimale avec notre application installable. Accès rapide et fonctionnement hors ligne."}
+              ? t('install.descriptionIOS')
+              : t('install.description')}
           </p>
 
           {/* Features */}
@@ -159,10 +161,10 @@ export default function InstallPrompt() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  Fonctionne hors ligne
+                  {t('install.feature1Title')}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Consultez vos recettes sans connexion
+                  {t('install.feature1Description')}
                 </p>
               </div>
             </div>
@@ -185,10 +187,10 @@ export default function InstallPrompt() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  Accès instantané
+                  {t('install.feature2Title')}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Lancez l'app depuis votre écran d'accueil
+                  {t('install.feature2Description')}
                 </p>
               </div>
             </div>
@@ -211,10 +213,10 @@ export default function InstallPrompt() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  Performance optimale
+                  {t('install.feature3Title')}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Expérience native et fluide
+                  {t('install.feature3Description')}
                 </p>
               </div>
             </div>
@@ -224,23 +226,13 @@ export default function InstallPrompt() {
           {isIOS ? (
             <div className="space-y-3">
               <p className="text-sm text-center text-gray-600 dark:text-gray-300">
-                Appuyez sur{" "}
-                <span className="inline-flex items-center px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M16 17v2H2v-2s0-4 7-4 7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59 5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7Z" />
-                  </svg>
-                </span>{" "}
-                puis "Sur l'écran d'accueil"
+                {t('install.iosInstructions')}
               </p>
               <button
                 onClick={handleDismiss}
                 className="w-full py-3 px-4 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
-                J'ai compris
+                {t('install.gotIt')}
               </button>
             </div>
           ) : (
@@ -250,13 +242,13 @@ export default function InstallPrompt() {
                 className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
               >
                 <Download className="w-5 h-5" />
-                Installer l'application
+                {t('install.installButton')}
               </button>
               <button
                 onClick={handleDismiss}
                 className="w-full py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
-                Plus tard
+                {t('install.later')}
               </button>
             </div>
           )}
