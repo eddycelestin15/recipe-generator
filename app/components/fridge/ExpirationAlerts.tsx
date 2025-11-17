@@ -88,7 +88,7 @@ export default function ExpirationAlerts({ items }: ExpirationAlertsProps) {
                   {t('fridge.expiringSoonMessage', {
                     name: item.name,
                     category: getCategoryLabel(item.category),
-                    days: status.daysRemaining
+                    days: status.daysRemaining ?? 0
                   })}
                 </p>
               </div>
