@@ -9,7 +9,6 @@ import { DailyNutritionRepository } from '../repositories/daily-nutrition-reposi
 import { NutritionGoalsRepository } from '../repositories/nutrition-goals-repository';
 import { WorkoutLogRepository } from '../repositories/workout-log-repository';
 import { AIInsightRepository } from '../repositories/ai-insight-repository';
-import { UserAchievementRepository } from '../repositories/user-achievement-repository';
 import type { CreateInsightDTO } from '../types/ai';
 
 const LAST_CHECK_KEY = 'auto_insights_last_check';
