@@ -1024,7 +1024,7 @@ Retourne UNIQUEMENT le JSON.`;
     daysUntilExpiration: number;
   }): Promise<{
     urgentRecipes: string[];
-    storageТips: string[];
+    storageTips: string[];
     freezeOptions: string[];
   }> {
     try {
